@@ -1,0 +1,16 @@
+This is the Source Code for the robot designed by Team 5333, 'Can't C#'
+
+Authors and their identifications are listed below
+    -Jaci: Jack Brunning
+    -Jett: Jett Jackson
+    -Cyra: Cyra Locsin
+
+This code requires the following Dependencies:
+    -WPILib & NetworkTables for FRC 2015
+
+Some code has been mirrored from the JaciUtil library available on Github
+    (http://www.github.com/JacisNonsense/JaciUtil), and was written soley
+    by Jack Brunning, a team member, and is licensed under the Apache
+    License V2 for Open Source Software. Some code has been changed in
+    order to better accommodate the robot, hence not using the library
+    as a dependency.
