@@ -2,6 +2,7 @@ package frc.team5333.core.drive;
 
 import edu.wpi.first.wpilibj.RobotDrive;
 import frc.team5333.core.RobotImpl;
+import frc.team5333.core.StateTracker;
 import frc.team5333.lib.Ports;
 import frc.team5333.lib.RobotState;
 import frc.team5333.lib.StateListener;
@@ -20,6 +21,7 @@ public class RobotDriveTracker implements StateListener {
 
     public static void prestart() {
         drive = new RobotDrive(Ports.LEFT_DRIVE.getPort(), Ports.RIGHT_DRIVE.getPort());
+        StateTracker.addTicker(new RobotDriveTracker());
     }
 
     public static void setLeft(double d) {

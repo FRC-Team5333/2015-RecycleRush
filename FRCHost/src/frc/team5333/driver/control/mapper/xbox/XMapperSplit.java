@@ -21,9 +21,9 @@ public class XMapperSplit extends AbstractControlMapper {
 
     @Override
     public void handleInput(PollData data, Component component, Controller controller) {
-        switch (component.getName()) {
+        switch (component.getIdentifier().getName()) {
             case "y":
-                sendMessage(NetIDs.DRIVE_LEFT, data.lastPollData);
+                sendMessage(NetIDs.DRIVE_LEFT, -data.lastPollData);
                 break;
             case "ry":
                 sendMessage(NetIDs.DRIVE_RIGHT, data.lastPollData);

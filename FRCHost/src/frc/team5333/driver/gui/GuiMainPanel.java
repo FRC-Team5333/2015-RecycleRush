@@ -68,7 +68,7 @@ public class GuiMainPanel extends JPanel {
         portLabel.setBounds(7, 232, 120, 20);
         this.add(portLabel);
 
-        hostnameField = new JTextField("roboRIO-5333");
+        hostnameField = new JTextField("roboRIO-5333.local");
         hostnameField.setBounds(100, 200, 200, 25);
         this.add(hostnameField);
 
@@ -113,22 +113,22 @@ public class GuiMainPanel extends JPanel {
 
         for (int i = 0; i < ControllerManager.buttons.size(); i++) {
             Component comp = ControllerManager.buttons.get(i);
-            int ind = Integer.parseInt(comp.getName());
+            int ind = Integer.parseInt(comp.getIdentifier().getName());
             boolean pressed = comp.getPollData() == 1F;
             gr.drawRect(25 * ind + 20, 160, 20, 20);
             gr.setColor(pressed ? Color.green : Color.red);
             gr.fillRect(25 * ind + 20, 160, 20, 20);
 
             gr.setColor(Color.black);
-            gr.drawString(comp.getName(), 25 * ind + 24, 175);
+            gr.drawString(comp.getIdentifier().getName(), 25 * ind + 24, 175);
         }
 
         PollData ltrigger = ControllerManager.instance.getData("z");
-        PollData rtrigger = ControllerManager.instance.getData("rz");
+        //PollData rtrigger = ControllerManager.instance.getData("rz");
 
         gr.setColor(Color.red);
         gr.fillRect(165, ltrigger.lastPollData > 0 ? 125 : (int) (125 + (ltrigger.lastPollData * 25)), 10, (int) Math.abs(ltrigger.lastPollData * 25));
-        gr.fillRect(205, rtrigger.lastPollData > 0 ? 125 : (int) (125 + (rtrigger.lastPollData * 25)), 10, (int) Math.abs(rtrigger.lastPollData * 25));
+        //gr.fillRect(205, rtrigger.lastPollData > 0 ? 125 : (int) (125 + (rtrigger.lastPollData * 25)), 10, (int) Math.abs(rtrigger.lastPollData * 25));
 
         gr.setColor(Color.black);
         gr.drawLine(160, 125, 180, 125);

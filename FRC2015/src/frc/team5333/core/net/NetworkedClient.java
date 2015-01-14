@@ -47,10 +47,10 @@ public class NetworkedClient extends Thread {
 //                else if (data[0].equalsIgnoreCase("rightThrottle"))
 //                    RobotDriveTracker.setRight(Double.parseDouble(data[1]));
                 byte id = reader.readByte();
-                byte data = reader.readByte();
+                float value = reader.readFloat();
 
-                float value = (float)data / 10F;
-
+                System.err.println("Message: " + id + " data: " + value);
+                
                 switch (NetIDs.getID(id)) {
                     case DRIVE_LEFT:
                         RobotDriveTracker.setLeft(value);

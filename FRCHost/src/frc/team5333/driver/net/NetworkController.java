@@ -34,8 +34,7 @@ public class NetworkController {
         if (socket != null && socket.isConnected()) {
             try {
                 writer.writeByte(id.id());
-                byte floatConvert = (byte) (value * 100);
-                writer.writeByte(floatConvert);
+                writer.writeFloat(value);
             } catch (Exception e) {}
         }
     }
