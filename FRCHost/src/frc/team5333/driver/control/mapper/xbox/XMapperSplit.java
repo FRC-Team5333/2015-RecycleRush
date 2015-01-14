@@ -1,10 +1,10 @@
 package frc.team5333.driver.control.mapper.xbox;
 
+import frc.team5333.NetIDs;
 import frc.team5333.driver.control.PollData;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
-
 import static frc.team5333.driver.net.NetworkController.*;
 
 public class XMapperSplit extends AbstractControlMapper {
@@ -23,10 +23,10 @@ public class XMapperSplit extends AbstractControlMapper {
     public void handleInput(PollData data, Component component, Controller controller) {
         switch (component.getName()) {
             case "y":
-                sendMessage("leftThrottle", data.lastPollData);
+                sendMessage(NetIDs.DRIVE_LEFT, data.lastPollData);
                 break;
             case "ry":
-                sendMessage("rightThrottle", data.lastPollData);
+                sendMessage(NetIDs.DRIVE_RIGHT, data.lastPollData);
                 break;
         }
     }
