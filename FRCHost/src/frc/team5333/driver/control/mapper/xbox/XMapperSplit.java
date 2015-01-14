@@ -1,6 +1,7 @@
 package frc.team5333.driver.control.mapper.xbox;
 
 import frc.team5333.NetIDs;
+import frc.team5333.driver.control.ControllerManager;
 import frc.team5333.driver.control.PollData;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
 import net.java.games.input.Component;
@@ -21,12 +22,13 @@ public class XMapperSplit extends AbstractControlMapper {
 
     @Override
     public void handleInput(PollData data, Component component, Controller controller) {
+    		//data.lastPollData = data.lastPollData / 2;
         switch (component.getIdentifier().getName()) {
             case "y":
                 sendMessage(NetIDs.DRIVE_LEFT, -data.lastPollData);
                 break;
             case "ry":
-                sendMessage(NetIDs.DRIVE_RIGHT, data.lastPollData);
+                sendMessage(NetIDs.DRIVE_RIGHT, -data.lastPollData);
                 break;
         }
     }

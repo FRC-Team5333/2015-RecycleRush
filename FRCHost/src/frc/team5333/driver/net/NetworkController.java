@@ -27,6 +27,7 @@ public class NetworkController {
             writer = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
+            GuiMainPanel.instance.refresh();
         }
     }
 
@@ -35,7 +36,9 @@ public class NetworkController {
             try {
                 writer.writeByte(id.id());
                 writer.writeFloat(value);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            	GuiMainPanel.instance.refresh();
+            }
         }
     }
 
