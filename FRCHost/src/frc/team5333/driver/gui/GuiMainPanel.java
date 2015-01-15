@@ -90,7 +90,7 @@ public class GuiMainPanel extends JPanel {
 
     public void refresh() {
         this.repaint();
-        connected = NetworkController.socket != null && NetworkController.socket.isConnected();
+        connected = NetworkController.socket != null && !NetworkController.socket.isClosed();
     }
 
     @Override
