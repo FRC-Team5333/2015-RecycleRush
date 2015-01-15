@@ -38,30 +38,12 @@ public class NetworkedClient extends Thread {
 			RobotImpl.log().info("Client Connected! " + client);
             DataInputStream reader = new DataInputStream(client.getInputStream());
             while ((Boolean)RobotData.blackboard.get("network:control:alive")) {
-//                String line = reader.readLine().trim();
-//                String[] data = line.split(":");
-//
-//                //TODO TEMPORARY
-//                if (data[0].equalsIgnoreCase("leftThrottle"))
-//                    RobotDriveTracker.setLeft(Double.parseDouble(data[1]));
-//                else if (data[0].equalsIgnoreCase("rightThrottle"))
-//                    RobotDriveTracker.setRight(Double.parseDouble(data[1]));
                 byte id = reader.readByte();
                 float value = reader.readFloat();
 
-                System.err.println("Message: " + id + " data: " + value);
-                
-                switch (NetIDs.getID(id)) {
-                    case DRIVE_LEFT:
-                        RobotDriveTracker.setLeft(value);
-                        break;
-                    case DRIVE_RIGHT:
-                        RobotDriveTracker.setRight(value);
-                        break;
-                }
+                NetParser.parse(NetIDs.getID(id), value);
             }
         } catch (IOException e) {
-            RobotData.blackboard.put("network:control:alive", false);
             RobotImpl.log().error("Client Disconnected: " + client);
         }
     }
