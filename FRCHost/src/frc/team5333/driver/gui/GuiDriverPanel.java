@@ -1,11 +1,12 @@
 package frc.team5333.driver.gui;
 
+import frc.team5333.driver.DriverStation;
 import frc.team5333.driver.control.ControlRegistry;
 import frc.team5333.driver.control.ControllerManager;
 import frc.team5333.driver.control.PollData;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
+import frc.team5333.driver.control.throttle.ThrottleScale;
 import frc.team5333.driver.net.NetworkController;
-import net.java.games.input.*;
 import net.java.games.input.Component;
 
 import javax.imageio.ImageIO;
@@ -14,21 +15,23 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GuiMainPanel extends JPanel {
+public class GuiDriverPanel extends JPanel {
 
     Image teamLogo;
     JComboBox<AbstractControlMapper> mapperBox;
-    public static GuiMainPanel instance;
+    JComboBox<ControllerManager> managerBox;
+    public static GuiDriverPanel instance;
     JTextField hostnameField;
     JTextField portField;
+    ControllerManager manager;
 
     public boolean connected = false;
 
-    public GuiMainPanel() {
+    public GuiDriverPanel() {
         this.setLayout(null);
         instance = this;
         try {
-            teamLogo = ImageIO.read(GuiMainPanel.class.getClassLoader().getResourceAsStream("frc/team5333/assets/logo.jpg")).getScaledInstance(100, 50, Image.SCALE_SMOOTH);
+            teamLogo = ImageIO.read(GuiDriverPanel.class.getClassLoader().getResourceAsStream("frc/team5333/assets/logo.jpg")).getScaledInstance(100, 50, Image.SCALE_SMOOTH);
             JLabel imageLabel = new JLabel(new ImageIcon(teamLogo));
             imageLabel.setBounds(7, 5, 100, 50);
             this.add(imageLabel);
@@ -45,6 +48,23 @@ public class GuiMainPanel extends JPanel {
     }
 
     public void initElements() {
+        JLabel controllerLabel = new JLabel("Controller: ");
+        controllerLabel.setFont(new Font("Arial", Font.ITALIC, 15));
+        controllerLabel.setBounds(7, 100, 120, 20);
+        this.add(controllerLabel);
+
+        managerBox = new JComboBox<ControllerManager>(DriverStation.managers.toArray(new ControllerManager[0]));
+        managerBox.setBounds(127, 100, 200, 25);
+        this.manager = (ControllerManager) managerBox.getSelectedItem();
+        managerBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DriverStation.activeManager = (ControllerManager) managerBox.getSelectedItem();
+                select((ControllerManager) managerBox.getSelectedItem());
+            }
+        });
+        this.add(managerBox);
+
         JLabel controlLabel = new JLabel("Control Scheme: ");
         controlLabel.setFont(new Font("Arial", Font.ITALIC, 15));
         controlLabel.setBounds(7, 70, 120, 20);
@@ -55,7 +75,9 @@ public class GuiMainPanel extends JPanel {
         mapperBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ControlRegistry.setActiveMap((AbstractControlMapper) mapperBox.getSelectedItem());
+                if (manager == null)
+                    return;
+                manager.activeMapper = (AbstractControlMapper) mapperBox.getSelectedItem();
             }
         });
         this.add(mapperBox);
@@ -86,6 +108,30 @@ public class GuiMainPanel extends JPanel {
             }
         });
         this.add(connectRIO);
+
+        JButton refreshControllers = new JButton("Refresh Controllers");
+        refreshControllers.setBounds(7, 130, 200, 25);
+        refreshControllers.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                reinitControllers();
+            }
+        });
+        this.add(refreshControllers);
+    }
+
+    public void reinitControllers() {
+        DriverStation.initControllers();
+        managerBox.setModel(new DefaultComboBoxModel<ControllerManager>(DriverStation.managers.toArray(new ControllerManager[0])));
+    }
+
+    public void select(ControllerManager manager) {
+        if (manager == null)
+            return;
+
+        mapperBox.setSelectedItem(manager.activeMapper);
+        this.manager = manager;
+        refresh();
     }
 
     public void refresh() {
@@ -98,48 +144,12 @@ public class GuiMainPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D gr = (Graphics2D) g;
 
-        gr.setColor(Color.black);
+        paintController(gr);
+    }
 
-        gr.drawOval(285, 236, 10, 10);
-
-        gr.drawOval(40, 100, 50, 50);
-        gr.drawOval(100, 100, 50, 50);
-
-        PollData ldatax = ControllerManager.instance.getData("x");
-        PollData ldatay = ControllerManager.instance.getData("y");
-
-        PollData rdatax = ControllerManager.instance.getData("rx");
-        PollData rdatay = ControllerManager.instance.getData("ry");
-
-        for (int i = 0; i < ControllerManager.buttons.size(); i++) {
-            Component comp = ControllerManager.buttons.get(i);
-            int ind = Integer.parseInt(comp.getIdentifier().getName());
-            boolean pressed = comp.getPollData() == 1F;
-            gr.drawRect(25 * ind + 20, 160, 20, 20);
-            gr.setColor(pressed ? Color.green : Color.red);
-            gr.fillRect(25 * ind + 20, 160, 20, 20);
-
-            gr.setColor(Color.black);
-            gr.drawString(comp.getIdentifier().getName(), 25 * ind + 24, 175);
-        }
-
-        PollData ltrigger = ControllerManager.instance.getData("z");
-        //PollData rtrigger = ControllerManager.instance.getData("rz");
-
-        gr.setColor(Color.red);
-        gr.fillRect(165, ltrigger.lastPollData > 0 ? 125 : (int) (125 + (ltrigger.lastPollData * 25)), 10, (int) Math.abs(ltrigger.lastPollData * 25));
-        //gr.fillRect(205, rtrigger.lastPollData > 0 ? 125 : (int) (125 + (rtrigger.lastPollData * 25)), 10, (int) Math.abs(rtrigger.lastPollData * 25));
-
-        gr.setColor(Color.black);
-        gr.drawLine(160, 125, 180, 125);
-        gr.drawLine(200, 125, 220, 125);
-
-        gr.setColor(Color.blue);
-        gr.fillOval(60 + (int) (ldatax.lastPollData * 20), 120 + (int) (ldatay.lastPollData * 20), 10, 10);
-        gr.fillOval(120 + (int)(rdatax.lastPollData * 20), 120 + (int)(rdatay.lastPollData * 20), 10, 10);
-
-        gr.setColor(connected ? Color.green : Color.red);
-        gr.fillOval(285, 236, 10, 10);
+    public void paintController(Graphics2D gr) {
+        gr.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 15));
+        gr.drawString("Throttle Scale: " + ThrottleScale.getScale() * 100 + "%", 7, 180);
     }
 
 }

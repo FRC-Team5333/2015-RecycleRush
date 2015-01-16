@@ -8,7 +8,7 @@ public class DriverGui extends JFrame {
         this.setTitle("Team 5333 Driver Station");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        this.add(new GuiMainPanel());
+        this.add(new GuiDriverPanel());
 
         this.pack();
         this.setVisible(true);
