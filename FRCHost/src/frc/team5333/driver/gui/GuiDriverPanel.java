@@ -4,13 +4,14 @@ import frc.team5333.driver.DriverStation;
 import frc.team5333.driver.control.ControlRegistry;
 import frc.team5333.driver.control.ControllerManager;
 import frc.team5333.driver.control.PollData;
+import frc.team5333.driver.control.drive.ThrottleScale;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
-import frc.team5333.driver.control.throttle.ThrottleScale;
 import frc.team5333.driver.net.NetworkController;
 import net.java.games.input.Component;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -150,6 +151,9 @@ public class GuiDriverPanel extends JPanel {
     public void paintController(Graphics2D gr) {
         gr.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 15));
         gr.drawString("Throttle Scale: " + ThrottleScale.getScale() * 100 + "%", 7, 180);
+        
+        gr.setColor(connected ? Color.green : Color.red);
+        gr.fillOval(285,  236,  10, 10);
     }
 
 }

@@ -1,4 +1,4 @@
-package frc.team5333.driver.control.throttle;
+package frc.team5333.driver.control.drive;
 
 public class ThrottleScale {
 
@@ -14,14 +14,21 @@ public class ThrottleScale {
 
     public static void increment() {
         scale = cut(scale + 10);
+        update();
     }
 
     public static void decrement() {
         scale = cut(scale - 10);
+        update();
     }
 
     private static int cut(int in) {
-        return (int) Math.max(Math.min(in, 100D), -100D);
+        return (int) Math.max(Math.min(in, 60D), -60D);
+    }
+    
+    public static void update() {
+    	DriveController.updateLeft();
+    	DriveController.updateRight();
     }
 
 }
