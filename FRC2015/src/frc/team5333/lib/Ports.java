@@ -7,8 +7,8 @@ package frc.team5333.lib;
  * @author Jaci
  */
 public enum Ports {
-    LEFT_DRIVE(0),
-    RIGHT_DRIVE(1),
+    LEFT_DRIVE(1),
+    RIGHT_DRIVE(0),
     ;
 
     int port;

@@ -6,3 +6,4 @@ FRC2015/build/
 *.dll
 FRC2015/dist/
 FRC2015/sysProps.xml
+FRCHost/.settings/
