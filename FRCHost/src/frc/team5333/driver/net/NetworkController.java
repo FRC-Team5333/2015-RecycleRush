@@ -7,6 +7,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/**
+ * Responsible for handling network connections between the Robot and the
+ * Driver Station
+ *
+ * @author Jaci
+ */
 public class NetworkController {
 
     public static Socket socket;

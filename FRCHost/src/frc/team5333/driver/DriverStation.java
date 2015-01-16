@@ -9,6 +9,12 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The root class for our custom Driver Station software, allowing
+ * us to gain more control over the robot and see more information
+ *
+ * @author Jaci
+ */
 public class DriverStation {
 
     public static ArrayList<ControllerManager> managers = new ArrayList<ControllerManager>();

@@ -2,6 +2,11 @@ package frc.team5333.driver.gui;
 
 import javax.swing.*;
 
+/**
+ * The JFrame container for the DriverStation GUI
+ *
+ * @author Jaci
+ */
 public class DriverGui extends JFrame {
 
     public DriverGui() {

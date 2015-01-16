@@ -4,6 +4,13 @@ import static frc.team5333.driver.net.NetworkController.sendMessage;
 import frc.team5333.NetIDs;
 import frc.team5333.driver.net.NetworkController;
 
+/**
+ * This class is responsible for storing data about the drive system and sending
+ * said data over the network. This will keep track of drive data, allowing
+ * us to store it or just purge an update if something isn't working right
+ *
+ * @author Jaci
+ */
 public class DriveController {
 
 	private static float left = 0;

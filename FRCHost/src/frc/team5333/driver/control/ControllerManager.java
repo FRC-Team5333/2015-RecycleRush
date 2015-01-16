@@ -10,6 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * The object responsible for receiving and dealing with input from a controller.
+ * This is useful in storing data and binding it to a controller, as well as customizing
+ * all of the data associated with the controller and how it is displayed
+ *
+ * @author Jaci
+ */
 public class ControllerManager {
 
     public Controller _controller;

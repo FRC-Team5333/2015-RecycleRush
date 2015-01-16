@@ -16,6 +16,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The main JPanel for the {@link frc.team5333.driver.gui.DriverGui}
+ *
+ * @author Jaci
+ */
 public class GuiDriverPanel extends JPanel {
 
     Image teamLogo;

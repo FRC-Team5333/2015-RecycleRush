@@ -9,6 +9,13 @@ import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import static frc.team5333.driver.net.NetworkController.sendMessage;
 
+/**
+ * A standard class that is called when input is received from the controller.
+ * This implementation allows for custom 'control-schemes', binding different buttons
+ * and axis to different tasks
+ *
+ * @author Jaci
+ */
 public abstract class AbstractControlMapper {
 
     public abstract String getFriendlyName();
