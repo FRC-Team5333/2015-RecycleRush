@@ -45,6 +45,7 @@ public class NetworkedClient extends Thread {
             }
         } catch (IOException e) {
             RobotImpl.log().error("Client Disconnected: " + client);
+            RobotDriveTracker.setBoth(0D);
         }
     }
 

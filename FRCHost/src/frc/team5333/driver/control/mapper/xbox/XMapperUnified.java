@@ -1,5 +1,6 @@
 package frc.team5333.driver.control.mapper.xbox;
 
+import frc.team5333.driver.control.ControllerManager;
 import frc.team5333.driver.control.PollData;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
 import net.java.games.input.Component;
@@ -18,7 +19,7 @@ public class XMapperUnified extends AbstractControlMapper {
     }
 
     @Override
-    public void handleInput(PollData data, Component component, Controller controller) {
+    public void handleInput(PollData data, Component component, Controller controller, ControllerManager manager) {
         switch (component.getName()) {
 
         }

@@ -4,7 +4,7 @@ package frc.team5333;
  * A shared collection of NetIDs that is kept constant between applications
  * communicating with the Robot.
  *
- * The implementation uses Bytes instead of Floats to save on transmission
+ * The implementation uses Bytes to save on transmission
  * cost and increase efficiency, thus using less data in order to react.
  *
  * @author Jaci

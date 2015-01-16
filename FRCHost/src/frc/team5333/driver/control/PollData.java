@@ -1,5 +1,11 @@
 package frc.team5333.driver.control;
 
+/**
+ * A container class for data being polled from a controller.
+ * This allows us to detect change with a certain 'dead-zone'
+ *
+ * @author Jaci
+ */
 public class PollData {
 
     public float lastPollData;

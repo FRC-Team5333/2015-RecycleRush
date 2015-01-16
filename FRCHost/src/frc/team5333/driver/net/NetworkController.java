@@ -1,13 +1,18 @@
 package frc.team5333.driver.net;
 
 import frc.team5333.NetIDs;
-import frc.team5333.driver.gui.GuiMainPanel;
+import frc.team5333.driver.gui.GuiDriverPanel;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * Responsible for handling network connections between the Robot and the
+ * Driver Station
+ *
+ * @author Jaci
+ */
 public class NetworkController {
 
     public static Socket socket;
@@ -23,11 +28,11 @@ public class NetworkController {
     public static void connect() {
         try {
             socket = new Socket(host, port);
-            GuiMainPanel.instance.refresh();
+            GuiDriverPanel.instance.refresh();
             writer = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
             e.printStackTrace();
-            GuiMainPanel.instance.refresh();
+            GuiDriverPanel.instance.refresh();
         }
     }
 
@@ -37,7 +42,7 @@ public class NetworkController {
                 writer.writeByte(id.id());
                 writer.writeFloat(value);
             } catch (Exception e) {
-            	GuiMainPanel.instance.refresh();
+            	GuiDriverPanel.instance.refresh();
             }
         }
     }
