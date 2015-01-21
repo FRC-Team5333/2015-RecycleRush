@@ -1,6 +1,8 @@
 package frc.team5333.lib.logger;
 
 
+import frc.team5333.core.net.EnumDispatchers;
+
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -54,6 +56,8 @@ public class Logger {
         builder.append(message);
 
         ps.println(builder.toString());
+
+        EnumDispatchers.DEBUG.get().broadcast(builder.toString());
     }
 
     public void log(String message, LogLevel level) {

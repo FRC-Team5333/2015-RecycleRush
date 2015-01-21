@@ -6,10 +6,7 @@ import frc.team5333.core.RobotImpl;
 import frc.team5333.core.drive.RobotDriveTracker;
 import frc.team5333.lib.RobotData;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -25,28 +22,38 @@ import static frc.team5333.NetIDs.DRIVE_LEFT;
 public class NetworkedClient extends Thread {
 
     ServerSocket server;
-    Socket client;
+    public Socket client;
+    NetworkDispatcher dispatcher;
 
-    public NetworkedClient(ServerSocket socket, Socket client) {
+    public DataInputStream reader;
+    public DataOutputStream writer;
+
+    public NetworkedClient(ServerSocket socket, Socket client, NetworkDispatcher dispatcher) {
         this.setName("Controlled Network Client");
         this.server = socket;
         this.client = client;
+        this.dispatcher = dispatcher;
     }
 
     public void run() {
         try {
 			RobotImpl.log().info("Client Connected! " + client);
-            DataInputStream reader = new DataInputStream(client.getInputStream());
-            while ((Boolean)RobotData.blackboard.get("network:control:alive")) {
+            reader = new DataInputStream(client.getInputStream());
+            writer = new DataOutputStream(client.getOutputStream());
+            while ((Boolean)RobotData.blackboard.get("network:" + dispatcher.nid + ":alive")) {
                 byte id = reader.readByte();
-                float value = reader.readFloat();
 
-                NetParser.parse(NetIDs.getID(id), value);
+                dispatcher.callback.readLoop(NetIDs.getID(id), this, reader);
             }
         } catch (IOException e) {
             RobotImpl.log().error("Client Disconnected: " + client);
             RobotDriveTracker.setBoth(0D);
         }
+    }
+
+    public void replyCommand(String s) throws IOException {
+        writer.writeByte(NetIDs.COMMAND_REPLY.id());
+        writer.writeUTF(s);
     }
 
 }

@@ -61,7 +61,7 @@ public class ThreadMonitor {
             builder.append("\tThread does not exist\n");
         else
             for (StackTraceElement element : elements)
-                builder.append("\t" + element);
+                builder.append("\t" + element + "\n");
 
         return builder.toString();
     }

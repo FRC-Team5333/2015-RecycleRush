@@ -1,5 +1,6 @@
 package frc.team5333.driver.gui;
 
+import frc.team5333.NetIDs;
 import frc.team5333.driver.DriverStation;
 import frc.team5333.driver.control.ControlRegistry;
 import frc.team5333.driver.control.ControllerManager;
@@ -14,6 +15,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 /**
  * The main JPanel for the {@link frc.team5333.driver.gui.DriverGui}
@@ -29,6 +32,7 @@ public class GuiDriverPanel extends JPanel {
     JTextField hostnameField;
     ControllerManager manager;
     JTextArea consoleLog;
+    JScrollPane consoleScroll;
 
 
     public GuiDriverPanel() {
@@ -49,6 +53,11 @@ public class GuiDriverPanel extends JPanel {
         this.setPreferredSize(new Dimension(600, 500));
         this.setEnabled(true);
         this.setVisible(true);
+    }
+
+    public void log(String s) {
+        consoleLog.append(s + "\n");
+        consoleScroll.getVerticalScrollBar().setValue(consoleScroll.getVerticalScrollBar().getMaximum());
     }
 
     public void initElements() {
@@ -119,10 +128,24 @@ public class GuiDriverPanel extends JPanel {
 
         consoleLog = new JTextArea();
         consoleLog.setEditable(false);
-        consoleLog.setAutoscrolls(true);
-        consoleLog.setBounds(7, 350, 585, 140);
-        consoleLog.setBackground(new Color(240, 240, 240));
-        this.add(consoleLog);
+
+        consoleScroll = new JScrollPane(consoleLog);
+        consoleScroll.setBounds(7, 350, 585, 115);
+        consoleScroll.setBackground(new Color(240, 240, 240));
+        this.add(consoleScroll);
+
+        JTextField commandInput = new JTextField();
+        commandInput.setBounds(7, 470, 585, 20);
+        commandInput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (EnumNetworkControllers.DEBUG.connected()) {
+                    EnumNetworkControllers.DEBUG.getController().sendMessage(NetIDs.COMMAND, commandInput.getText());
+                    commandInput.setText("");
+                }
+            }
+        });
+        this.add(commandInput);
     }
 
     public void reinitControllers() {
@@ -160,7 +183,7 @@ public class GuiDriverPanel extends JPanel {
             gr.setColor(cont.connected() ? Color.green : Color.red);
             gr.fillOval(8 + (i * 30), 325, 15, 15);
             gr.setColor(Color.black);
-            gr.fillOval(11 + (i * 30), 328, 10, 10);
+            gr.fillOval(11 + (i * 30), 328, 9, 9);
             gr.setFont(new Font("Arial", Font.ITALIC, 11));
             gr.drawString(cont.getShortName(), 7 + (i * 30), 320);
         }

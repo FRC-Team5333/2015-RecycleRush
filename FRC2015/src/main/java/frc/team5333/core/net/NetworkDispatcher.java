@@ -5,6 +5,7 @@ import frc.team5333.lib.RobotData;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * The network dispatcher for the Control Station. This is mostly
@@ -14,19 +15,30 @@ import java.net.Socket;
  */
 public class NetworkDispatcher extends Thread {
 
-    public NetworkDispatcher() {
-        this.setName("Network Control Dispatcher");
+    String nid;
+    int port;
+    INetReader callback;
+
+    public ArrayList<NetworkedClient> connectedClients = new ArrayList<NetworkedClient>();
+
+    public NetworkDispatcher(String id, int port, INetReader callback) {
+        this.setName("Network " + id + " Dispatcher");
+        this.nid = id;
+        this.port = port;
+        this.callback = callback;
     }
 
     public void run() {
         try {
-            RobotData.blackboard.putIfAbsent("network:control:port", 5801);
-            RobotData.blackboard.putIfAbsent("network:control:alive", true);
-            ServerSocket socket = new ServerSocket((int)RobotData.blackboard.get("network:control:port"));
+            RobotData.blackboard.putIfAbsent("network:" + nid + ":port", port);
+            RobotData.blackboard.putIfAbsent("network:" + nid + ":alive", true);
+            RobotData.blackboard.put("network:" + nid + ":dispatch", this);
+            ServerSocket socket = new ServerSocket((int)RobotData.blackboard.get("network:" + nid + ":port"));
 
-            while ((Boolean)RobotData.blackboard.get("network:control:alive")) {
+            while ((Boolean)RobotData.blackboard.get("network:" + nid + ":alive")) {
                 Socket clientS = socket.accept();
-                NetworkedClient client = new NetworkedClient(socket, clientS);
+                NetworkedClient client = new NetworkedClient(socket, clientS, this);
+                connectedClients.add(client);
                 client.start();
             }
         } catch (IOException e) {
@@ -34,4 +46,13 @@ public class NetworkDispatcher extends Thread {
         }
     }
 
+    public void broadcast(String s) {
+        for (NetworkedClient socket : connectedClients) {
+            try {
+                if (!socket.client.isClosed())
+                    socket.replyCommand(s);
+            } catch (Exception e) {
+            }
+        }
+    }
 }

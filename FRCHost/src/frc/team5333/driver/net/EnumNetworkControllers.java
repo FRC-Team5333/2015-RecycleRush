@@ -1,13 +1,31 @@
 package frc.team5333.driver.net;
 
+import frc.team5333.NetIDs;
+import frc.team5333.driver.gui.GuiDriverPanel;
+
+import java.io.IOException;
+
 /**
  * The enumeration for all the network controllers required by the program
  *
  * @author Jaci
  */
 public enum EnumNetworkControllers {
-    CONTROL("Control", "Co", new NetworkController(5801)),
-    DEBUG("Debug", "De", new NetworkController(5802));
+    CONTROL("Control", "Co", new NetworkController(5801, new INetReader() {
+        @Override
+        public void readLoop(NetIDs id, NetworkController client) throws IOException {
+        }
+    })),
+    DEBUG("Debug", "De", new NetworkController(5802, new INetReader() {
+        @Override
+        public void readLoop(NetIDs id, NetworkController client) throws IOException {
+            switch (id) {
+                case COMMAND_REPLY:
+                    GuiDriverPanel.instance.log(client.reader.readUTF());
+                    break;
+            }
+        }
+    }));
 
     String named;
     String shortname;
@@ -26,7 +44,8 @@ public enum EnumNetworkControllers {
     }
 
     public boolean connected() {
-        return controller.socket != null && !controller.socket.isClosed();
+        controller.connected = controller.socket != null && !controller.socket.isClosed();
+        return controller.connected;
     }
 
     public NetworkController getController() {

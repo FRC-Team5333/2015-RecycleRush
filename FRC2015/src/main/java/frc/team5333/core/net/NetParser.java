@@ -1,7 +1,13 @@
 package frc.team5333.core.net;
 
 import frc.team5333.NetIDs;
+import frc.team5333.core.RobotImpl;
 import frc.team5333.core.drive.RobotDriveTracker;
+import frc.team5333.core.monitor.PDPMonitor;
+import frc.team5333.lib.ThreadMonitor;
+
+import java.io.DataInputStream;
+import java.io.IOException;
 
 /**
  * Parses data coming from clients and acts accordingly
@@ -10,7 +16,7 @@ import frc.team5333.core.drive.RobotDriveTracker;
  */
 public class NetParser {
 
-    public static void parse(NetIDs id, float data) {
+    public static void parse(NetIDs id, float data, NetworkedClient client) {
         switch (id) {
             case DRIVE_LEFT:
                 RobotDriveTracker.setLeft(data);
@@ -19,6 +25,26 @@ public class NetParser {
                 RobotDriveTracker.setRight(data);
                 break;
         }
+    }
+
+    public static void parse(NetIDs id, String data, NetworkedClient client) throws IOException {
+        try {
+            switch (id) {
+                case COMMAND:
+                    if (data.equalsIgnoreCase("ping"))
+                        RobotImpl.log().info("pong");
+                    if (data.equalsIgnoreCase("pig"))
+                        RobotImpl.log().info("pog");
+
+                    if (data.equalsIgnoreCase("stktce"))
+                        RobotImpl.log().info(ThreadMonitor.getFormattedStackTrace(null));
+
+                    if (data.startsWith("pdp"))
+                        PDPMonitor.parse(data.split(" "));
+
+                    break;
+            }
+        } catch (Exception e) {}
     }
 
 }

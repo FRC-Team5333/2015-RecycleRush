@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team5333.core.drive.RobotDriveTracker;
+import frc.team5333.core.monitor.PDPMonitor;
+import frc.team5333.core.net.EnumDispatchers;
 import frc.team5333.core.net.NetworkDispatcher;
 import frc.team5333.lib.FRCHooks;
 import frc.team5333.lib.RobotData;
@@ -62,14 +64,11 @@ public class RobotImpl extends RobotBase {
     @Override
     protected void prestart() {
         log().info("Prestart Phase Begun...");
-        log().info("The thing happened...");
         profiler().beginSection("prestart");
 
         RobotData.blackboard.put("Team", 5333);
         RobotData.blackboard.put("RobotImpl", this);
-        NetworkDispatcher dispatcher = new NetworkDispatcher();
-        RobotData.blackboard.putIfAbsent("network:control:dispatch", dispatcher);
-        dispatcher.start();
+        EnumDispatchers.start();
 
         RobotDriveTracker.prestart();
 
@@ -87,6 +86,8 @@ public class RobotImpl extends RobotBase {
     public void startCompetition() {
         log().info("Main Program Starting...");
         profiler().beginSection("start");
+
+        PDPMonitor.init();
 
         LiveWindow.setEnabled(false);
         profiler().endSection("start");
