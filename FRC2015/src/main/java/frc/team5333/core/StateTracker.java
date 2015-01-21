@@ -3,6 +3,7 @@ package frc.team5333.core;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import frc.team5333.core.monitor.PDPMonitor;
 import frc.team5333.lib.FRCHooks;
 import frc.team5333.lib.RobotData;
 import frc.team5333.lib.RobotState;
@@ -102,6 +103,8 @@ public class StateTracker {
                     tick(RobotState.TELEOP);
                 }
             }
+
+            PDPMonitor.tick();
 
             impl.station().waitForData();
         }

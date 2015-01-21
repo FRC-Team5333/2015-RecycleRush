@@ -44,7 +44,6 @@ public class NetworkController {
         } catch (IOException e) {
             e.printStackTrace();
             tryClose();
-            GuiDriverPanel.instance.refresh();
         }
     }
 
@@ -60,7 +59,6 @@ public class NetworkController {
                     }
                 } catch (Exception e) {
                     tryClose();
-                    GuiDriverPanel.instance.refresh();
                 }
             }
         });
@@ -73,31 +71,31 @@ public class NetworkController {
                 socket.close();
 
             connected = false;
+
+            GuiDriverPanel.instance.refresh();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void sendMessage(NetIDs id, float value) {
-        if (socket != null && socket.isConnected()) {
+        if (socket != null && !socket.isClosed()) {
             try {
                 writer.writeByte(id.id());
                 writer.writeFloat(value);
             } catch (Exception e) {
                 tryClose();
-                GuiDriverPanel.instance.refresh();
             }
         }
     }
 
     public void sendMessage(NetIDs id, String value) {
-        if (socket != null && socket.isConnected()) {
+        if (socket != null && !socket.isClosed()) {
             try {
                 writer.writeByte(id.id());
                 writer.writeUTF(value);
             } catch (Exception e) {
                 tryClose();
-                GuiDriverPanel.instance.refresh();
             }
         }
     }

@@ -7,3 +7,7 @@ FRC2015/build/
 FRC2015/dist/
 FRC2015/sysProps.xml
 FRCHost/.settings/
+*.ipr
+*.iml
+*.iws
+FRC2015/.gradle/

@@ -1,6 +1,7 @@
 package frc.team5333.core.drive;
 
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Talon;
 import frc.team5333.core.RobotImpl;
 import frc.team5333.core.StateTracker;
 import frc.team5333.lib.Ports;
@@ -18,9 +19,13 @@ public class RobotDriveTracker implements StateListener {
     static double right;
 
     static RobotDrive drive;
+    static Talon leftMotor;
+    static Talon rightMotor;
 
     public static void prestart() {
-        drive = new RobotDrive(Ports.LEFT_DRIVE.getPort(), Ports.RIGHT_DRIVE.getPort());
+        leftMotor = new Talon(Ports.LEFT_DRIVE.getPort());
+        rightMotor = new Talon(Ports.RIGHT_DRIVE.getPort());
+        drive = new RobotDrive(leftMotor, rightMotor);
         StateTracker.addTicker(new RobotDriveTracker());
     }
 
@@ -35,6 +40,14 @@ public class RobotDriveTracker implements StateListener {
     public static void setBoth(double d) {
         setLeft(d);
         setRight(d);
+    }
+
+    public static double getLeft() {
+        return left;
+    }
+
+    public static double getRight() {
+        return right;
     }
 
     public static void update() {
