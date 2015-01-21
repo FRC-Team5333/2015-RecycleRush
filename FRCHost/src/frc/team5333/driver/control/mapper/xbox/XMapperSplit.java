@@ -1,14 +1,11 @@
 package frc.team5333.driver.control.mapper.xbox;
 
-import frc.team5333.NetIDs;
 import frc.team5333.driver.control.ControllerManager;
 import frc.team5333.driver.control.PollData;
 import frc.team5333.driver.control.drive.DriveController;
-import frc.team5333.driver.control.drive.ThrottleScale;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
-import static frc.team5333.driver.net.NetworkController.*;
 
 public class XMapperSplit extends AbstractControlMapper {
 

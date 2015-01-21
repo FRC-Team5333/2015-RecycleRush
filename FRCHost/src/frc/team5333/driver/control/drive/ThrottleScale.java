@@ -31,7 +31,7 @@ public class ThrottleScale {
     }
 
     private static int cut(int in) {
-        return (int) Math.max(Math.min(in, 60D), -60D);
+        return (int) Math.max(Math.min(in, 100D), -100D);
     }
     
     public static void update() {

@@ -3,11 +3,10 @@ package frc.team5333.driver.gui;
 import frc.team5333.driver.DriverStation;
 import frc.team5333.driver.control.ControlRegistry;
 import frc.team5333.driver.control.ControllerManager;
-import frc.team5333.driver.control.PollData;
 import frc.team5333.driver.control.drive.ThrottleScale;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
+import frc.team5333.driver.net.EnumNetworkControllers;
 import frc.team5333.driver.net.NetworkController;
-import net.java.games.input.Component;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -28,10 +27,9 @@ public class GuiDriverPanel extends JPanel {
     JComboBox<ControllerManager> managerBox;
     public static GuiDriverPanel instance;
     JTextField hostnameField;
-    JTextField portField;
     ControllerManager manager;
+    JTextArea consoleLog;
 
-    public boolean connected = false;
 
     public GuiDriverPanel() {
         this.setLayout(null);
@@ -92,25 +90,19 @@ public class GuiDriverPanel extends JPanel {
         hostLabel.setBounds(7, 202, 120, 20);
         this.add(hostLabel);
 
-        JLabel portLabel = new JLabel("RIO Port: ");
-        portLabel.setBounds(7, 232, 120, 20);
-        this.add(portLabel);
-
         hostnameField = new JTextField("roboRIO-5333.local");
+        if (System.getProperty("os.name").toUpperCase().startsWith("MAC"))
+            hostnameField.setText("10.53.33.20");
         hostnameField.setBounds(100, 200, 200, 25);
         this.add(hostnameField);
 
-        portField = new JTextField("5801");
-        portField.setBounds(100, 230, 70, 25);
-        this.add(portField);
-
         JButton connectRIO = new JButton("Connect");
-        connectRIO.setBounds(170, 230, 115, 25);
+        connectRIO.setBounds(7, 230, 130, 25);
         connectRIO.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NetworkController.setData(hostnameField.getText(), Integer.parseInt(portField.getText()));
-                NetworkController.connect();
+                NetworkController.setData(hostnameField.getText());
+                EnumNetworkControllers.connectAll();
             }
         });
         this.add(connectRIO);
@@ -124,6 +116,13 @@ public class GuiDriverPanel extends JPanel {
             }
         });
         this.add(refreshControllers);
+
+        consoleLog = new JTextArea();
+        consoleLog.setEditable(false);
+        consoleLog.setAutoscrolls(true);
+        consoleLog.setBounds(7, 350, 585, 140);
+        consoleLog.setBackground(new Color(240, 240, 240));
+        this.add(consoleLog);
     }
 
     public void reinitControllers() {
@@ -142,7 +141,6 @@ public class GuiDriverPanel extends JPanel {
 
     public void refresh() {
         this.repaint();
-        connected = NetworkController.socket != null && !NetworkController.socket.isClosed();
     }
 
     @Override
@@ -157,8 +155,15 @@ public class GuiDriverPanel extends JPanel {
         gr.setFont(new Font("Arial", Font.ITALIC | Font.BOLD, 15));
         gr.drawString("Throttle Scale: " + ThrottleScale.getScale() * 100 + "%", 7, 180);
         
-        gr.setColor(connected ? Color.green : Color.red);
-        gr.fillOval(285,  236,  10, 10);
+        for (int i = 0; i < EnumNetworkControllers.values().length; i++) {
+            EnumNetworkControllers cont = EnumNetworkControllers.values()[i];
+            gr.setColor(cont.connected() ? Color.green : Color.red);
+            gr.fillOval(8 + (i * 30), 325, 15, 15);
+            gr.setColor(Color.black);
+            gr.fillOval(11 + (i * 30), 328, 10, 10);
+            gr.setFont(new Font("Arial", Font.ITALIC, 11));
+            gr.drawString(cont.getShortName(), 7 + (i * 30), 320);
+        }
     }
 
 }

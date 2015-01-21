@@ -1,8 +1,7 @@
 package frc.team5333.driver.control.drive;
 
-import static frc.team5333.driver.net.NetworkController.sendMessage;
 import frc.team5333.NetIDs;
-import frc.team5333.driver.net.NetworkController;
+import frc.team5333.driver.net.EnumNetworkControllers;
 
 /**
  * This class is responsible for storing data about the drive system and sending
@@ -27,10 +26,10 @@ public class DriveController {
 	}
 	
 	public static void updateLeft() {
-		NetworkController.sendMessage(NetIDs.DRIVE_LEFT, (float) -ThrottleScale.scale(left));
+		EnumNetworkControllers.CONTROL.getController().sendMessage(NetIDs.DRIVE_LEFT, (float) -ThrottleScale.scale(left));
 	}
 	public static void updateRight() {
-		NetworkController.sendMessage(NetIDs.DRIVE_RIGHT, (float) -ThrottleScale.scale(right));
+		EnumNetworkControllers.CONTROL.getController().sendMessage(NetIDs.DRIVE_RIGHT, (float) -ThrottleScale.scale(right));
 	}
 	
 	

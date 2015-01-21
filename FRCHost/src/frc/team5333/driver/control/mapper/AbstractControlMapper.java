@@ -1,13 +1,11 @@
 package frc.team5333.driver.control.mapper;
 
-import frc.team5333.NetIDs;
 import frc.team5333.driver.control.ControllerManager;
 import frc.team5333.driver.control.PollData;
 import frc.team5333.driver.control.drive.ThrottleScale;
 import frc.team5333.driver.gui.GuiDriverPanel;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
-import static frc.team5333.driver.net.NetworkController.sendMessage;
 
 /**
  * A standard class that is called when input is received from the controller.

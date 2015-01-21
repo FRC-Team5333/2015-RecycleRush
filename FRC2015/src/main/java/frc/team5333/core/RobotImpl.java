@@ -8,6 +8,8 @@ import frc.team5333.core.drive.RobotDriveTracker;
 import frc.team5333.core.net.NetworkDispatcher;
 import frc.team5333.lib.FRCHooks;
 import frc.team5333.lib.RobotData;
+import frc.team5333.lib.logger.DriverStationPS;
+import frc.team5333.lib.logger.LogLevel;
 import frc.team5333.lib.logger.Logger;
 import frc.team5333.lib.profiler.Profiler;
 
@@ -60,6 +62,7 @@ public class RobotImpl extends RobotBase {
     @Override
     protected void prestart() {
         log().info("Prestart Phase Begun...");
+        log().info("The thing happened...");
         profiler().beginSection("prestart");
 
         RobotData.blackboard.put("Team", 5333);
