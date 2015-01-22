@@ -31,16 +31,20 @@ public class NetParser {
         try {
             switch (id) {
                 case COMMAND:
+                    String[] split = data.split(" ");
                     if (data.equalsIgnoreCase("ping"))
                         RobotImpl.log().info("pong");
                     if (data.equalsIgnoreCase("pig"))
                         RobotImpl.log().info("pog");
 
-                    if (data.equalsIgnoreCase("stktce"))
-                        RobotImpl.log().info(ThreadMonitor.getFormattedStackTrace(null));
+                    if (data.startsWith("stktce"))
+                        if (split.length > 1)
+                            RobotImpl.log().info(ThreadMonitor.getFormattedStackTrace(split[1]));
+                        else
+                            RobotImpl.log().info(ThreadMonitor.getFormattedStackTrace(null));
 
                     if (data.startsWith("pdp"))
-                        PDPMonitor.parse(data.split(" "));
+                        PDPMonitor.parse(split);
 
                     break;
             }
