@@ -5,6 +5,11 @@ import frc.team5333.NetIDs;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+/**
+ * An enumeration for the Network Dispatchers
+ *
+ * @author Jaci
+ */
 public enum EnumDispatchers {
 
     CONTROL("control", 5801, new INetReader() {

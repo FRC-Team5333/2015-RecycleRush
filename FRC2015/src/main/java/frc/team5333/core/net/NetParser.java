@@ -46,6 +46,11 @@ public class NetParser {
                     if (data.startsWith("pdp"))
                         PDPMonitor.parse(split);
 
+                    if (data.equals("left"))
+                        RobotImpl.log().info("Left Motor: " + RobotDriveTracker.getLeft());
+                    if (data.equals("right"))
+                        RobotImpl.log().info("Right Motor: " + RobotDriveTracker.getRight());
+
                     break;
             }
         } catch (Exception e) {}
