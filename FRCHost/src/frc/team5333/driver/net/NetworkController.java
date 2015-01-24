@@ -7,6 +7,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Responsible for handling network connections between the Robot and the
@@ -24,9 +25,24 @@ public class NetworkController {
     public boolean connected = false;
     INetReader callback;
 
+    boolean lock;
+
+    int timeoutRemain;
+
     public NetworkController(int port, INetReader callback) {
         this.port = port;
         this.callback = callback;
+    }
+
+    public static boolean ping() throws IOException, InterruptedException {
+        boolean isWindows = System.getProperty("os.name").toLowerCase().contains("win");
+
+        ProcessBuilder processBuilder = new ProcessBuilder("ping", isWindows ? "-n" : "-c", "1", host);
+        Process process = processBuilder.start();
+
+        boolean e = process.waitFor(1000, TimeUnit.MILLISECONDS);
+        return e && process.exitValue() == 0;
+
     }
 
     public static void setData(String hostname) {
@@ -41,9 +57,33 @@ public class NetworkController {
             reader = new DataInputStream(socket.getInputStream());
             connected = true;
             beginRead();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        timeoutRemain = 2;
+                        while (true) {
+                            timeoutRemain--;
+                            if (timeoutRemain == 0)
+                                tryClose();
+
+                            periodicTest();
+                            Thread.sleep(1000);
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Ping Failed!");
+                    };
+                }
+            }).start();
         } catch (IOException e) {
-            e.printStackTrace();
             tryClose();
+        }
+    }
+
+    public void periodicTest() throws IOException {
+        if (!lock) {
+            writer.writeByte(NetIDs.PING.id());
         }
     }
 
@@ -53,9 +93,13 @@ public class NetworkController {
             @Override
             public void run() {
                 try {
-                    while (connected) {
+                    while (true) {
                         byte id = reader.readByte();
-                        callback.readLoop(NetIDs.getID(id), controller);
+                        if (id == NetIDs.PING.id())
+                            writer.writeByte(NetIDs.PONG.id());
+                        else if (id == NetIDs.PONG.id())
+                            timeoutRemain = 2;
+                        else callback.readLoop(NetIDs.getID(id), controller);
                     }
                 } catch (Exception e) {
                     tryClose();
@@ -67,12 +111,11 @@ public class NetworkController {
 
     void tryClose() {
         try {
+            connected = false;
+            GuiDriverPanel.instance.refresh();
+
             if (!socket.isClosed())
                 socket.close();
-
-            connected = false;
-
-            GuiDriverPanel.instance.refresh();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,8 +124,10 @@ public class NetworkController {
     public void sendMessage(NetIDs id, float value) {
         if (socket != null && !socket.isClosed()) {
             try {
+                lock = true;
                 writer.writeByte(id.id());
                 writer.writeFloat(value);
+                lock = false;
             } catch (Exception e) {
                 tryClose();
             }
@@ -92,8 +137,10 @@ public class NetworkController {
     public void sendMessage(NetIDs id, String value) {
         if (socket != null && !socket.isClosed()) {
             try {
+                lock = true;
                 writer.writeByte(id.id());
                 writer.writeUTF(value);
+                lock = false;
             } catch (Exception e) {
                 tryClose();
             }

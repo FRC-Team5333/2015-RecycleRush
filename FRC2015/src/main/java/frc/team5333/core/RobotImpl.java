@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team5333.core.drive.RobotDriveTracker;
+import frc.team5333.core.io.UserButton;
 import frc.team5333.core.monitor.PDPMonitor;
 import frc.team5333.core.net.EnumDispatchers;
 import frc.team5333.core.net.NetworkDispatcher;
@@ -66,6 +67,8 @@ public class RobotImpl extends RobotBase {
         log().info("Prestart Phase Begun...");
         profiler().beginSection("prestart");
 
+        StateTracker.addTicker(new UserButton());
+
         RobotData.blackboard.put("Team", 5333);
         RobotData.blackboard.put("RobotImpl", this);
         EnumDispatchers.start();
@@ -92,19 +95,16 @@ public class RobotImpl extends RobotBase {
         LiveWindow.setEnabled(false);
         profiler().endSection("start");
 
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                log().info("Shutting down robot...");
+                EnumDispatchers.stop();
+            }
+        });
+
         StateTracker.init(this);
         log().info("No longer alive, program exiting...");
-        shutdown();
-
-    }
-
-    /**
-     * The common method that will shutdown the robot safely and run any
-     * tasks required for shutdown
-     */
-    public static void shutdown() {
-        log().info("Robot Shutting Down");
-        System.exit(0);
     }
 
 }

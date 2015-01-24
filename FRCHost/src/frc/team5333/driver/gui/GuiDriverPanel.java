@@ -4,6 +4,7 @@ import frc.team5333.NetIDs;
 import frc.team5333.driver.DriverStation;
 import frc.team5333.driver.control.ControlRegistry;
 import frc.team5333.driver.control.ControllerManager;
+import frc.team5333.driver.control.drive.DriveController;
 import frc.team5333.driver.control.drive.ThrottleScale;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
 import frc.team5333.driver.net.EnumNetworkControllers;
@@ -29,7 +30,7 @@ public class GuiDriverPanel extends JPanel {
     JComboBox<AbstractControlMapper> mapperBox;
     JComboBox<ControllerManager> managerBox;
     public static GuiDriverPanel instance;
-    JTextField hostnameField;
+    public JTextField hostnameField;
     ControllerManager manager;
     JTextArea consoleLog;
     JScrollPane consoleScroll;
@@ -100,8 +101,12 @@ public class GuiDriverPanel extends JPanel {
         this.add(hostLabel);
 
         hostnameField = new JTextField("roboRIO-5333.local");
-        if (System.getProperty("os.name").toUpperCase().startsWith("MAC"))
+        if (System.getProperty("os.name").toUpperCase().startsWith("MAC")) {
             hostnameField.setText("10.53.33.20");
+            NetworkController.setData("10.53.33.20");
+        } else
+            NetworkController.setData("roboRIO-5333.local");
+
         hostnameField.setBounds(100, 200, 200, 25);
         this.add(hostnameField);
 
@@ -187,6 +192,13 @@ public class GuiDriverPanel extends JPanel {
             gr.setFont(new Font("Arial", Font.ITALIC, 11));
             gr.drawString(cont.getShortName(), 7 + (i * 30), 320);
         }
+
+        gr.setFont(new Font("Arial", Font.BOLD, 14));
+        gr.setColor(DriveController.isLocked() ? Color.RED : Color.GREEN);
+        gr.fillRect(7, 290, 50, 20);
+
+        gr.setColor(Color.BLACK);
+        gr.drawString(DriveController.isLocked() ? "Lift" : "Drive", 10, 305);
     }
 
 }

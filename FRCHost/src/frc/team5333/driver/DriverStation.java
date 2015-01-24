@@ -2,9 +2,12 @@ package frc.team5333.driver;
 
 import frc.team5333.driver.control.ControllerManager;
 import frc.team5333.driver.gui.DriverGui;
+import frc.team5333.driver.net.EnumNetworkControllers;
+import frc.team5333.driver.net.NetworkController;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,32 @@ public class DriverStation {
                 while (true) {
                     for (ControllerManager manager : managers)
                         manager.poll();
+                }
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    boolean connected = true;
+                    for (EnumNetworkControllers controller : EnumNetworkControllers.values())
+                        if (!controller.connected())
+                            connected = false;
+
+                    if (!connected) {
+                        try {
+                            boolean available = NetworkController.ping();
+                            if (available)
+                                EnumNetworkControllers.connectAll();
+                        } catch (Exception e) {
+                        }
+                    }
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }).start();

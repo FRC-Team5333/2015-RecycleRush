@@ -12,8 +12,12 @@ package frc.team5333;
 public enum NetIDs {
     DRIVE_RIGHT(0),
     DRIVE_LEFT(1),
-    COMMAND(2),
-    COMMAND_REPLY(3),
+    CLAMP(2),
+    LIFT(3),
+    COMMAND(20),
+    COMMAND_REPLY(21),
+    PING(40),
+    PONG(41),
     ;
 
     byte id;

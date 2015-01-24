@@ -24,12 +24,29 @@ public class XMapperSplit extends AbstractControlMapper {
         switch (component.getIdentifier().getName()) {
             case "y":
                 //sendMessage(NetIDs.DRIVE_LEFT, (float) -ThrottleScale.scale(data.lastPollData));
-            	DriveController.setLeft(data.lastPollData);
+                if (!DriveController.isLocked())
+            	    DriveController.setLeft(data.lastPollData);
                 break;
             case "ry":
                 //sendMessage(NetIDs.DRIVE_RIGHT, (float) -ThrottleScale.scale(data.lastPollData));
-            	DriveController.setRight(data.lastPollData);
+                if (!DriveController.isLocked())
+            	    DriveController.setRight(data.lastPollData);
                 break;
+            case "0":
+                if (data.lastPollData > 0.5)
+                    DriveController.toggleLock();
+                break;
+
+            case "x":
+                if (DriveController.isLocked())
+                    DriveController.setClamp(data.lastPollData);
+                break;
+
+            case "rx":
+                if (DriveController.isLocked())
+                    DriveController.setLift(data.lastPollData);
+                break;
+
         }
     }
 

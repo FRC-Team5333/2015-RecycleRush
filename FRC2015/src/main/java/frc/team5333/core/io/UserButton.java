@@ -1,10 +1,16 @@
 package frc.team5333.core.io;
 
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Utility;
 import frc.team5333.core.RobotImpl;
 import frc.team5333.lib.RobotState;
 import frc.team5333.lib.StateListener;
 
+/**
+ * Handles data being sent from the User Button on the RoboRIO
+ *
+ * @author Jaci
+ */
 public class UserButton implements StateListener {
 
     public static boolean pressed;
@@ -25,14 +31,11 @@ public class UserButton implements StateListener {
     }
 
     public static void pressTick() {
-
     }
 
     public static void onChange() {
         if (pressed)
             pressStart = System.currentTimeMillis();
-
-        RobotImpl.log().info("User Button Change. Current state: " + pressed);
     }
 
     @Override

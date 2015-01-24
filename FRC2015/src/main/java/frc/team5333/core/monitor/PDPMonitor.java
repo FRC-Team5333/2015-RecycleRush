@@ -4,13 +4,16 @@ import edu.wpi.first.wpilibj.ControllerPower;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import frc.team5333.lib.EvictingQueue;
 
-import java.util.LinkedList;
-
 import static frc.team5333.core.RobotImpl.*;
 
+/**
+ * Manages the monitoring of the Power Distribution Panel
+ *
+ * @author Jaci
+ */
 public class PDPMonitor {
 
-    public static EvictingQueue<PDPPoll> pollHistory = new EvictingQueue<PDPPoll>(5);
+    public static EvictingQueue<PDPPoll> pollHistory = new EvictingQueue<PDPPoll>(10);
 
     static PowerDistributionPanel panel;
 
@@ -20,7 +23,9 @@ public class PDPMonitor {
 
     public static void parse(String[] cmd) {
         if (cmd[1].equalsIgnoreCase("voltage"))
-            log().info("PDP Voltage: " + round(panel.getVoltage()));
+            log().info("Controller Voltage: " + round(ControllerPower.getInputVoltage()));
+        else if (cmd[1].equalsIgnoreCase("batvoltage"))
+            log().info("Battery Voltage: " + round(panel.getVoltage()));
         else if (cmd[1].equalsIgnoreCase("temp"))
             log().info("PDP Temperature: " + round(panel.getTemperature()));
         else if (cmd[1].equalsIgnoreCase("current"))
@@ -41,27 +46,31 @@ public class PDPMonitor {
     }
 
     public static void tick() {
-        double[] current = new double[15];
-        for (int i = 0; i < 15; i++) {
+        double[] current = new double[16];
+        for (int i = 0; i < 16; i++) {
             current[i] = panel.getCurrent(i);
         }
-        PDPPoll poll = new PDPPoll(panel.getVoltage(), current);
+        PDPPoll poll = new PDPPoll(ControllerPower.getInputVoltage(), current);
         pollHistory.add(poll);
 
         if (!ControllerPower.getEnabled3V3() || !ControllerPower.getEnabled5V() || !ControllerPower.getEnabled6V()) {
             //We've browned-out
             PDPPoll highest = null;
+            PDPPoll lowestVoltage = null;
             PDPPoll[] array =  pollHistory.toArray(new PDPPoll[0]);
             for (PDPPoll p : array) {
                 if (p == null) continue;
-                if (highest == null || p.totalDraw > highest.totalDraw)
+                if (highest == null || p.totalCurrentDraw > highest.totalCurrentDraw)
                     highest = p;
+                if (lowestVoltage == null || lowestVoltage.batteryVoltage > p.batteryVoltage)
+                    lowestVoltage = p;
             }
 
-            if (highest != null) {
-                log().error("Robot has browned-out. Voltage: " + highest.batteryVoltage);
-                for (int i = 0; i < highest.current.length; i++) {
-                    log().error(String.format("\tPort %s current draw: %s", i, highest.current[i]) + (highest.highestIndex == i ? " (HIGHEST) " : ""));
+            if (lowestVoltage != null && highest != null) {
+                log().error("Robot has browned-out. Lowest Voltage: " + round(lowestVoltage.batteryVoltage));
+                log().error("\tHighest Current Draw: " + highest.totalCurrentDraw);
+                for (int i = 0; i < highest.portCurrent.length; i++) {
+                    log().error(String.format("\tPort %s current draw: %s", i, highest.portCurrent[i]) + (highest.highestIndex == i ? " (HIGHEST) " : ""));
                 }
             }
         }

@@ -4,6 +4,7 @@ import frc.team5333.NetIDs;
 import frc.team5333.core.RobotImpl;
 import frc.team5333.core.drive.RobotDriveTracker;
 import frc.team5333.core.monitor.PDPMonitor;
+import frc.team5333.lib.RobotData;
 import frc.team5333.lib.ThreadMonitor;
 
 import java.io.DataInputStream;
@@ -23,6 +24,12 @@ public class NetParser {
                 break;
             case DRIVE_RIGHT:
                 RobotDriveTracker.setRight(data);
+                break;
+            case CLAMP:
+                RobotDriveTracker.setClamp(data);
+                break;
+            case LIFT:
+                RobotDriveTracker.setLift(data);
                 break;
         }
     }
@@ -50,6 +57,11 @@ public class NetParser {
                         RobotImpl.log().info("Left Motor: " + RobotDriveTracker.getLeft());
                     if (data.equals("right"))
                         RobotImpl.log().info("Right Motor: " + RobotDriveTracker.getRight());
+
+                    if (data.equals("clamp"))
+                        RobotImpl.log().info("Clamp Motor: " + RobotDriveTracker.getClamp());
+                    if (data.equals("lift"))
+                        RobotImpl.log().info("Lift Motor: " + RobotDriveTracker.getLift());
 
                     break;
             }

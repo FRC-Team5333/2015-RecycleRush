@@ -6,6 +6,7 @@ import frc.team5333.core.net.EnumDispatchers;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -27,6 +28,8 @@ public class Logger {
     public static final LogLevel SEVERE = new LogLevel("SEVERE").setPrintStream(DriverStationPS.get());
 
     public DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy-hh:mm:ss");
+
+    public static ArrayList<String> backlog = new ArrayList<String>();
 
     int attr;
     String name;
@@ -55,9 +58,12 @@ public class Logger {
         builder.append("[" + level + "] ");
         builder.append(message);
 
-        ps.println(builder.toString());
+        String ts = builder.toString();
 
-        EnumDispatchers.DEBUG.get().broadcast(builder.toString());
+        ps.println(ts);
+
+        backlog.add(ts);
+        EnumDispatchers.DEBUG.get().broadcast(ts);
     }
 
     public void log(String message, LogLevel level) {

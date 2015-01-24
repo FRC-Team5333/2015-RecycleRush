@@ -37,6 +37,8 @@ public class ThrottleScale {
     public static void update() {
     	DriveController.updateLeft();
     	DriveController.updateRight();
+        DriveController.updateClamp();
+        DriveController.updateLift();
     }
 
 }

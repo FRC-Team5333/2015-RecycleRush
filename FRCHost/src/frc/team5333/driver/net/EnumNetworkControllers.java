@@ -38,6 +38,7 @@ public enum EnumNetworkControllers {
     }
 
     public static void connectAll() {
+        NetworkController.setData(GuiDriverPanel.instance.hostnameField.getText());
         for (EnumNetworkControllers controller : EnumNetworkControllers.values()) {
             controller.controller.connect();
         }

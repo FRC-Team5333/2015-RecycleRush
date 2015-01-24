@@ -1,5 +1,6 @@
 package frc.team5333.core.net;
 
+import frc.team5333.lib.Ports;
 import frc.team5333.lib.RobotData;
 
 import java.io.IOException;
@@ -18,14 +19,17 @@ public class NetworkDispatcher extends Thread {
     String nid;
     int port;
     INetReader callback;
+    ServerSocket socket;
+    Ports signal;
 
     public ArrayList<NetworkedClient> connectedClients = new ArrayList<NetworkedClient>();
 
-    public NetworkDispatcher(String id, int port, INetReader callback) {
-        this.setName("Network " + id + " Dispatcher");
+    public NetworkDispatcher(String id, int port, INetReader callback, Ports signal) {
+        this.setName("Network-" + id + "-Dispatcher");
         this.nid = id;
         this.port = port;
         this.callback = callback;
+        this.signal = signal;
     }
 
     public void run() {
@@ -37,7 +41,7 @@ public class NetworkDispatcher extends Thread {
 
             while ((Boolean)RobotData.blackboard.get("network:" + nid + ":alive")) {
                 Socket clientS = socket.accept();
-                NetworkedClient client = new NetworkedClient(socket, clientS, this);
+                NetworkedClient client = new NetworkedClient(socket, clientS, this, signal);
                 connectedClients.add(client);
                 client.start();
             }
@@ -54,5 +58,10 @@ public class NetworkDispatcher extends Thread {
             } catch (Exception e) {
             }
         }
+    }
+
+    public void stopNetwork() throws IOException {
+        RobotData.blackboard.putIfAbsent("network:" + nid + ":alive", false);
+        socket.close();
     }
 }

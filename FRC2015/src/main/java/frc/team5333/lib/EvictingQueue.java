@@ -3,6 +3,9 @@ package frc.team5333.lib;
 import java.lang.reflect.Array;
 import java.util.Queue;
 
+/**
+ * A Queue that will evict the oldest element when a new one is added
+ */
 public class EvictingQueue<T> {
 
     Object[] array;

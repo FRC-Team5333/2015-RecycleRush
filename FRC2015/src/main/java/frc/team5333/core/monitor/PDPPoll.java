@@ -1,21 +1,28 @@
 package frc.team5333.core.monitor;
 
+/**
+ * A container of data from the PDP
+ *
+ * @author Jaci
+ */
 public class PDPPoll {
 
-    public double[] current = new double[15];
-    public double totalDraw;
-    double highest;
+    public double[] portCurrent = new double[16];
+    public double totalCurrentDraw;
+    double highestCurrent;
     public int highestIndex = 0;
 
     public double batteryVoltage;
 
     public PDPPoll(double voltage, double... currents) {
         for (int i = 0; i < currents.length; i++) {
-            current[i] = currents[i];
-            totalDraw += currents[i];
+            portCurrent[i] = currents[i];
+            totalCurrentDraw += currents[i];
 
-            if (currents[i] > highest)
+            if (currents[i] > highestCurrent) {
+                highestCurrent = currents[i];
                 highestIndex = i;
+            }
         }
         batteryVoltage = voltage;
     }

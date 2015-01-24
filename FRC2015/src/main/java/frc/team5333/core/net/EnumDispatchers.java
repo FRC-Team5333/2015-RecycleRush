@@ -1,6 +1,7 @@
 package frc.team5333.core.net;
 
 import frc.team5333.NetIDs;
+import frc.team5333.lib.Ports;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -17,19 +18,19 @@ public enum EnumDispatchers {
         public void readLoop(NetIDs id, NetworkedClient client, DataInputStream reader) throws IOException {
             NetParser.parse(id, reader.readFloat(), client);
         }
-    }),
+    }, Ports.NET_CONTROL),
     DEBUG("debug", 5802, new INetReader() {
         @Override
         public void readLoop(NetIDs id, NetworkedClient client, DataInputStream reader) throws IOException {
             String utf = reader.readUTF();
             NetParser.parse(id, utf, client);
         }
-    });
+    }, Ports.NET_DEBUG);
 
     NetworkDispatcher dispatch;
 
-    EnumDispatchers(String id, int port, INetReader reader) {
-        NetworkDispatcher dispatch = new NetworkDispatcher(id, port, reader);
+    EnumDispatchers(String id, int port, INetReader reader, Ports signal) {
+        NetworkDispatcher dispatch = new NetworkDispatcher(id, port, reader, signal);
         this.dispatch = dispatch;
     }
 
@@ -40,6 +41,15 @@ public enum EnumDispatchers {
     public static void start() {
         for (EnumDispatchers dis : EnumDispatchers.values()) {
             dis.get().start();
+        }
+    }
+
+    public static void stop() {
+        for (EnumDispatchers dis : EnumDispatchers.values()) {
+            try {
+                dis.get().stopNetwork();
+            } catch (IOException e) {
+            }
         }
     }
 
