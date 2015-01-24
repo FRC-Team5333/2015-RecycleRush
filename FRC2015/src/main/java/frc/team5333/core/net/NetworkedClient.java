@@ -65,7 +65,7 @@ public class NetworkedClient extends Thread {
                 @Override
                 public void run() {
                     try {
-                        timeoutRemain = 2;
+                        timeoutRemain = 5;
                         while (true) {
                             timeoutRemain--;
                             if (timeoutRemain == 0)
@@ -86,7 +86,7 @@ public class NetworkedClient extends Thread {
                 if (id == NetIDs.PING.id())
                     writer.writeByte(NetIDs.PONG.id());
                 else if (id == NetIDs.PONG.id())
-                    timeoutRemain = 2;
+                    timeoutRemain = 5;
                 else
                     dispatcher.callback.readLoop(NetIDs.getID(id), this, reader);
             }

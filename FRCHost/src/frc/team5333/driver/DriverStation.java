@@ -25,16 +25,6 @@ public class DriverStation {
 
     public static void main(String[] args) {
         initControllers();
-        DriverGui gui = new DriverGui();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    for (ControllerManager manager : managers)
-                        manager.poll();
-                }
-            }
-        }).start();
 
         new Thread(new Runnable() {
             @Override
@@ -58,6 +48,17 @@ public class DriverStation {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                }
+            }
+        }).start();
+
+        DriverGui gui = new DriverGui();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (true) {
+                    for (ControllerManager manager : managers)
+                        manager.poll();
                 }
             }
         }).start();

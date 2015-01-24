@@ -84,9 +84,9 @@ public class RobotDriveTracker implements StateListener {
     }
 
     public static void update() {
-        drive.tankDrive(left, right, true);
+        drive.tankDrive(left, right, false);
 
-        otherDrive.tankDrive(clamp, lift);
+        otherDrive.tankDrive(clamp, lift, false);
     }
 
     @Override

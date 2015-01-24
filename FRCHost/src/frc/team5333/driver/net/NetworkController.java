@@ -62,7 +62,7 @@ public class NetworkController {
                 @Override
                 public void run() {
                     try {
-                        timeoutRemain = 2;
+                        timeoutRemain = 5;
                         while (true) {
                             timeoutRemain--;
                             if (timeoutRemain == 0)
@@ -98,8 +98,9 @@ public class NetworkController {
                         if (id == NetIDs.PING.id())
                             writer.writeByte(NetIDs.PONG.id());
                         else if (id == NetIDs.PONG.id())
-                            timeoutRemain = 2;
-                        else callback.readLoop(NetIDs.getID(id), controller);
+                            timeoutRemain = 5;
+                        else
+                            callback.readLoop(NetIDs.getID(id), controller);
                     }
                 } catch (Exception e) {
                     tryClose();
