@@ -2,7 +2,6 @@ package frc.team5333.driver.net;
 
 import frc.team5333.NetIDs;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 
 public interface INetReader {

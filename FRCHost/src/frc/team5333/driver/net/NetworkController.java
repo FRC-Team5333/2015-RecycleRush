@@ -57,33 +57,9 @@ public class NetworkController {
             reader = new DataInputStream(socket.getInputStream());
             connected = true;
             beginRead();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        timeoutRemain = 5;
-                        while (true) {
-                            timeoutRemain--;
-                            if (timeoutRemain == 0)
-                                tryClose();
-
-                            periodicTest();
-                            Thread.sleep(1000);
-                        }
-                    } catch (Exception e) {
-                        System.err.println("Ping Failed!");
-                    };
-                }
-            }).start();
         } catch (IOException e) {
+            e.printStackTrace();
             tryClose();
-        }
-    }
-
-    public void periodicTest() throws IOException {
-        if (!lock) {
-            writer.writeByte(NetIDs.PING.id());
         }
     }
 
@@ -95,12 +71,7 @@ public class NetworkController {
                 try {
                     while (true) {
                         byte id = reader.readByte();
-                        if (id == NetIDs.PING.id())
-                            writer.writeByte(NetIDs.PONG.id());
-                        else if (id == NetIDs.PONG.id())
-                            timeoutRemain = 5;
-                        else
-                            callback.readLoop(NetIDs.getID(id), controller);
+                        callback.readLoop(NetIDs.getID(id), controller);
                     }
                 } catch (Exception e) {
                     tryClose();
@@ -115,7 +86,7 @@ public class NetworkController {
             connected = false;
             GuiDriverPanel.instance.refresh();
 
-            if (!socket.isClosed())
+            if (socket != null && !socket.isClosed())
                 socket.close();
         } catch (IOException e) {
             e.printStackTrace();

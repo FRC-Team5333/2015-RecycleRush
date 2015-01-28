@@ -16,8 +16,6 @@ public enum NetIDs {
     LIFT(3),
     COMMAND(20),
     COMMAND_REPLY(21),
-    PING(40),
-    PONG(41),
     ;
 
     byte id;

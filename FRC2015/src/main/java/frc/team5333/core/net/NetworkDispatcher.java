@@ -46,16 +46,17 @@ public class NetworkDispatcher extends Thread {
                 client.start();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            NetParser.netLogger.exception(e);
         }
     }
 
     public void broadcast(String s) {
         for (NetworkedClient socket : connectedClients) {
             try {
-                if (!socket.client.isClosed())
+                if (socket.client != null && !socket.client.isClosed())
                     socket.replyCommand(s);
             } catch (Exception e) {
+                NetParser.netLogger.exception(e);
             }
         }
     }

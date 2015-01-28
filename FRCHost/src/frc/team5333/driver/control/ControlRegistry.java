@@ -3,7 +3,6 @@ package frc.team5333.driver.control;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
 import frc.team5333.driver.control.mapper.xbox.XMapperSplit;
 import frc.team5333.driver.control.mapper.xbox.XMapperUnified;
-import frc.team5333.driver.gui.GuiDriverPanel;
 
 import java.util.ArrayList;
 

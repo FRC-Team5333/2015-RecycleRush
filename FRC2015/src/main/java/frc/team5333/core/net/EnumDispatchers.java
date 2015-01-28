@@ -1,6 +1,7 @@
 package frc.team5333.core.net;
 
 import frc.team5333.NetIDs;
+import frc.team5333.core.RobotImpl;
 import frc.team5333.lib.Ports;
 
 import java.io.DataInputStream;
@@ -49,6 +50,7 @@ public enum EnumDispatchers {
             try {
                 dis.get().stopNetwork();
             } catch (IOException e) {
+                NetParser.netLogger.exception(e);
             }
         }
     }

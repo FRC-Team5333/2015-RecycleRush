@@ -34,6 +34,7 @@ public class Logger {
     int attr;
     String name;
 
+
     public Logger(String name, int attributes) {
         this.attr = attributes;
         this.name = name;
@@ -47,6 +48,21 @@ public class Logger {
     private void log(String message, String level, PrintStream ps) {
         StringBuilder builder = new StringBuilder();
 
+        builder.append(getPrefix(level));
+
+        builder.append(message);
+
+        String ts = builder.toString();
+
+        ps.println(ts);
+
+        backlog.add(ts);
+        EnumDispatchers.DEBUG.get().broadcast(ts);
+    }
+
+    public String getPrefix(String level) {
+        StringBuilder builder = new StringBuilder();
+
         if ((attr & ATTR_TIME) == ATTR_TIME)
             builder.append("[" + getTime() + "] ");
 
@@ -56,14 +72,17 @@ public class Logger {
             builder.append("[" + Thread.currentThread().getName() + "] ");
 
         builder.append("[" + level + "] ");
-        builder.append(message);
 
-        String ts = builder.toString();
+        return builder.toString();
+    }
 
-        ps.println(ts);
+    public void exception(Exception e) {
+        String s = "";
+        s += e.toString() + "\n";
+        for (StackTraceElement element : e.getStackTrace())
+            s += "\tat " + element + "\n";
 
-        backlog.add(ts);
-        EnumDispatchers.DEBUG.get().broadcast(ts);
+        error(s);
     }
 
     public void log(String message, LogLevel level) {

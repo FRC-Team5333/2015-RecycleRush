@@ -2,17 +2,16 @@ package frc.team5333.core;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team5333.core.drive.RobotDriveTracker;
+import frc.team5333.core.io.IOManager;
 import frc.team5333.core.io.UserButton;
 import frc.team5333.core.monitor.PDPMonitor;
+import frc.team5333.core.monitor.RIOMonitor;
 import frc.team5333.core.net.EnumDispatchers;
-import frc.team5333.core.net.NetworkDispatcher;
+import frc.team5333.core.net.command.CommandRegistry;
 import frc.team5333.lib.FRCHooks;
 import frc.team5333.lib.RobotData;
-import frc.team5333.lib.logger.DriverStationPS;
-import frc.team5333.lib.logger.LogLevel;
 import frc.team5333.lib.logger.Logger;
 import frc.team5333.lib.profiler.Profiler;
 
@@ -68,6 +67,7 @@ public class RobotImpl extends RobotBase {
         profiler().beginSection("prestart");
 
         StateTracker.addTicker(new UserButton());
+        StateTracker.addTicker(new IOManager());
 
         RobotData.blackboard.put("Team", 5333);
         RobotData.blackboard.put("RobotImpl", this);
@@ -91,6 +91,7 @@ public class RobotImpl extends RobotBase {
         profiler().beginSection("start");
 
         PDPMonitor.init();
+        CommandRegistry.init();
 
         LiveWindow.setEnabled(false);
         profiler().endSection("start");

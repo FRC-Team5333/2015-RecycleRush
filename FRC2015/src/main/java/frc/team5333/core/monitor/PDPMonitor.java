@@ -2,16 +2,17 @@ package frc.team5333.core.monitor;
 
 import edu.wpi.first.wpilibj.ControllerPower;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import frc.team5333.core.net.command.ICommand;
 import frc.team5333.lib.EvictingQueue;
 
-import static frc.team5333.core.RobotImpl.*;
+import static frc.team5333.core.RobotImpl.log;
 
 /**
  * Manages the monitoring of the Power Distribution Panel
  *
  * @author Jaci
  */
-public class PDPMonitor {
+public class PDPMonitor implements ICommand {
 
     public static EvictingQueue<PDPPoll> pollHistory = new EvictingQueue<PDPPoll>(10);
 
@@ -21,23 +22,28 @@ public class PDPMonitor {
         panel = new PowerDistributionPanel();
     }
 
-    public static void parse(String[] cmd) {
-        if (cmd[1].equalsIgnoreCase("voltage"))
+    @Override
+    public String getCommandPrefix() {
+        return "pdp";
+    }
+
+    public void runCommand(String[] cmd) {
+        if (cmd[0].equalsIgnoreCase("voltage"))
             log().info("Controller Voltage: " + round(ControllerPower.getInputVoltage()));
-        else if (cmd[1].equalsIgnoreCase("batvoltage"))
+        else if (cmd[0].equalsIgnoreCase("batvoltage"))
             log().info("Battery Voltage: " + round(panel.getVoltage()));
-        else if (cmd[1].equalsIgnoreCase("temp"))
+        else if (cmd[0].equalsIgnoreCase("temp"))
             log().info("PDP Temperature: " + round(panel.getTemperature()));
-        else if (cmd[1].equalsIgnoreCase("current"))
-            if (cmd.length > 2)
-                log().info("PDP Port Current: " + round(panel.getCurrent(Integer.parseInt(cmd[2]))));
+        else if (cmd[0].equalsIgnoreCase("current"))
+            if (cmd.length > 1)
+                log().info("PDP Port Current: " + round(panel.getCurrent(Integer.parseInt(cmd[1]))));
             else
                 log().info("PDP Total Current: " + round(panel.getTotalCurrent()));
-        else if (cmd[1].equalsIgnoreCase("power"))
+        else if (cmd[0].equalsIgnoreCase("power"))
             log().info("PDP Total Power: " + round(panel.getTotalPower()));
-        else if (cmd[1].equalsIgnoreCase("energy"))
+        else if (cmd[0].equalsIgnoreCase("energy"))
             log().info("PDP Total Energy: " + round(panel.getTotalEnergy()));
-        else if (cmd[1].equalsIgnoreCase("reset"))
+        else if (cmd[0].equalsIgnoreCase("reset"))
             panel.clearStickyFaults();
     }
 

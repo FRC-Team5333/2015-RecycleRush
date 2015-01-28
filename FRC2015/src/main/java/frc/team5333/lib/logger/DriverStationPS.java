@@ -1,9 +1,10 @@
 package frc.team5333.lib.logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.team5333.core.RobotImpl;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
 /**
  * A class for pairing the Log to the DriverStation error

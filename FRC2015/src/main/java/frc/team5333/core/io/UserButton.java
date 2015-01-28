@@ -1,8 +1,6 @@
 package frc.team5333.core.io;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Utility;
-import frc.team5333.core.RobotImpl;
 import frc.team5333.lib.RobotState;
 import frc.team5333.lib.StateListener;
 

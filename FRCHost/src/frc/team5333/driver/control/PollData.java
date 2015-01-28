@@ -14,10 +14,7 @@ public class PollData {
 
     public boolean poll(float data) {
         boolean changed = false;
-        if (range(data, 0, 0.25))
-            data = 0;
-
-        if (Math.abs(lastPollData - data) > 0.05 || (range(data, 0, 0.25) && !range(lastPollData, 0, 0.25)))
+        if (Math.abs(lastPollData - data) > 0.05)
             changed = true;
         highest = Math.max(data, highest);
         lowest = Math.min(data, lowest);

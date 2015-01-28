@@ -4,10 +4,10 @@ import frc.team5333.NetIDs;
 import frc.team5333.core.RobotImpl;
 import frc.team5333.core.drive.RobotDriveTracker;
 import frc.team5333.core.monitor.PDPMonitor;
-import frc.team5333.lib.RobotData;
+import frc.team5333.core.net.command.CommandRegistry;
 import frc.team5333.lib.ThreadMonitor;
+import frc.team5333.lib.logger.Logger;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
@@ -16,6 +16,8 @@ import java.io.IOException;
  * @author Jaci
  */
 public class NetParser {
+    
+    public static Logger netLogger = new Logger("Network", Logger.ATTR_DEFAULT);
 
     public static void parse(NetIDs id, float data, NetworkedClient client) {
         switch (id) {
@@ -40,32 +42,33 @@ public class NetParser {
                 case COMMAND:
                     String[] split = data.split(" ");
                     if (data.equalsIgnoreCase("ping"))
-                        RobotImpl.log().info("pong");
+                        netLogger.info("pong");
                     if (data.equalsIgnoreCase("pig"))
-                        RobotImpl.log().info("pog");
+                        netLogger.info("pog");
 
                     if (data.startsWith("stktce"))
                         if (split.length > 1)
-                            RobotImpl.log().info(ThreadMonitor.getFormattedStackTrace(split[1]));
+                            netLogger.info(ThreadMonitor.getFormattedStackTrace(split[1]));
                         else
-                            RobotImpl.log().info(ThreadMonitor.getFormattedStackTrace(null));
-
-                    if (data.startsWith("pdp"))
-                        PDPMonitor.parse(split);
+                            netLogger.info(ThreadMonitor.getFormattedStackTrace(null));
 
                     if (data.equals("left"))
-                        RobotImpl.log().info("Left Motor: " + RobotDriveTracker.getLeft());
+                        netLogger.info("Left Motor: " + RobotDriveTracker.getLeft());
                     if (data.equals("right"))
-                        RobotImpl.log().info("Right Motor: " + RobotDriveTracker.getRight());
+                        netLogger.info("Right Motor: " + RobotDriveTracker.getRight());
 
                     if (data.equals("clamp"))
-                        RobotImpl.log().info("Clamp Motor: " + RobotDriveTracker.getClamp());
+                        netLogger.info("Clamp Motor: " + RobotDriveTracker.getClamp());
                     if (data.equals("lift"))
-                        RobotImpl.log().info("Lift Motor: " + RobotDriveTracker.getLift());
+                        netLogger.info("Lift Motor: " + RobotDriveTracker.getLift());
+
+                    CommandRegistry.parse(data);
 
                     break;
             }
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            netLogger.exception(e);
+        }
     }
 
 }
