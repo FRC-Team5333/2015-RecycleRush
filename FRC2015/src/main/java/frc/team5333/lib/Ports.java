@@ -1,9 +1,7 @@
 package frc.team5333.lib;
 
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.AnalogOutput;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.*;
+import frc.team5333.core.RobotImpl;
 import frc.team5333.core.io.IOCallback;
 import frc.team5333.core.io.LimitCallback;
 
@@ -36,13 +34,14 @@ public enum Ports {
     AnalogOutput aio;
     AnalogInput aii;
 
-    IOCallback callback;
+    IOCallback callback = null;
 
     Ports(int portID) {
         this.port = portID;
     }
 
     Ports(int portID, IOCallback callback) {
+        this(portID);
         this.callback = callback;
     }
 

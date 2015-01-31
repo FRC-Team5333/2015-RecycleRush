@@ -1,5 +1,6 @@
 package frc.team5333.core.net;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.team5333.lib.Ports;
 import frc.team5333.lib.RobotData;
 
@@ -53,10 +54,10 @@ public class NetworkDispatcher extends Thread {
     public void broadcast(String s) {
         for (NetworkedClient socket : connectedClients) {
             try {
-                if (socket.client != null && !socket.client.isClosed())
+                if (socket.client != null && !socket.client.isClosed()) {
                     socket.replyCommand(s);
+                }
             } catch (Exception e) {
-                NetParser.netLogger.exception(e);
             }
         }
     }

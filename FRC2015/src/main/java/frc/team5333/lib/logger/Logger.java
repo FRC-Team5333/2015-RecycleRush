@@ -1,6 +1,7 @@
 package frc.team5333.lib.logger;
 
 
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.team5333.core.net.EnumDispatchers;
 
 import java.io.PrintStream;
