@@ -3,17 +3,17 @@ package frc.team5333.core.drive;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
-import frc.team5333.core.StateTracker;
 import frc.team5333.lib.Ports;
-import frc.team5333.lib.RobotState;
-import frc.team5333.lib.StateListener;
+import jaci.openrio.toast.core.StateTracker;
+import jaci.openrio.toast.lib.state.RobotState;
+import jaci.openrio.toast.lib.state.StateListener;
 
 /**
  * Responsible for driving the robot's motors
  *
  * @author Jaci
  */
-public class RobotDriveTracker implements StateListener {
+public class RobotDriveTracker implements StateListener.Ticker {
 
     static double left;
     static double right;
@@ -99,11 +99,5 @@ public class RobotDriveTracker implements StateListener {
     public void tickState(RobotState state) {
         if (state != RobotState.DISABLED)
             update();
-    }
-
-    @Override
-    public void transitionState(RobotState state, RobotState oldState) {
-        if (state == RobotState.DISABLED)
-            setAll(0D);
     }
 }

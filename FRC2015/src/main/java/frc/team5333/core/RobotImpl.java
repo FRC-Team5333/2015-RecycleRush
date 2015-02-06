@@ -1,38 +1,27 @@
 package frc.team5333.core;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import frc.team5333.core.drive.RobotDriveTracker;
 import frc.team5333.core.io.IOManager;
 import frc.team5333.core.io.UserButton;
-import frc.team5333.core.monitor.PDPMonitor;
-import frc.team5333.core.monitor.RIOMonitor;
 import frc.team5333.core.net.EnumDispatchers;
 import frc.team5333.core.net.command.CommandRegistry;
-import frc.team5333.lib.FRCHooks;
 import frc.team5333.lib.RobotData;
-import frc.team5333.lib.logger.Logger;
-import frc.team5333.lib.profiler.Profiler;
+import jaci.openrio.toast.core.StateTracker;
+import jaci.openrio.toast.core.Toast;
+import jaci.openrio.toast.core.webui.WebRegistry;
+import jaci.openrio.toast.lib.Robot;
+import jaci.openrio.toast.lib.log.Logger;
 
 /**
  * The base robot class designed to hook into the rest of the program
  *
  * @author Jaci
  */
-public class RobotImpl extends RobotBase {
+public class RobotImpl implements Robot {
 
-    static Profiler profiler;
     static Logger logger;
-
-    /**
-     * Get the Profiler for the robot. This is used for tracking the impact
-     * or load of certain sections of code on the robot
-     */
-    public static Profiler profiler() {
-        if (profiler == null) profiler = new Profiler("RobotImpl");
-        return profiler;
-    }
 
     /**
      * Get the logger for the robot. This is used to log data to the robot's console
@@ -47,7 +36,7 @@ public class RobotImpl extends RobotBase {
      * Get the DriverStation object
      */
     public DriverStation station() {
-        return m_ds;
+        return Toast.getToast().station();
     }
 
     /**
@@ -62,9 +51,8 @@ public class RobotImpl extends RobotBase {
      * Use this for Pre-Initialization tasks
      */
     @Override
-    protected void prestart() {
+    public void prestart() {
         log().info("Prestart Phase Begun...");
-        profiler().beginSection("prestart");
 
         StateTracker.addTicker(new UserButton());
         StateTracker.addTicker(new IOManager());
@@ -74,10 +62,8 @@ public class RobotImpl extends RobotBase {
         EnumDispatchers.start();
 
         RobotDriveTracker.prestart();
+        Logger.addHandler(new LogManager());
 
-        FRCHooks.robotReady();
-
-        profiler().endSection("prestart");
         log().info("Prestart Phase End...");
     }
 
@@ -88,13 +74,10 @@ public class RobotImpl extends RobotBase {
     @Override
     public void startCompetition() {
         log().info("Main Program Starting...");
-        profiler().beginSection("start");
 
-        PDPMonitor.init();
         CommandRegistry.init();
 
         LiveWindow.setEnabled(false);
-        profiler().endSection("start");
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
@@ -103,9 +86,6 @@ public class RobotImpl extends RobotBase {
                 EnumDispatchers.stop();
             }
         });
-
-        StateTracker.init(this);
-        log().info("No longer alive, program exiting...");
     }
 
 }

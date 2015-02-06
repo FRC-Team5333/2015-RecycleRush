@@ -1,7 +1,6 @@
 package frc.team5333.core.net.command;
 
-import frc.team5333.core.monitor.PDPMonitor;
-import frc.team5333.core.monitor.RIOMonitor;
+import frc.team5333.core.monitor.PDPCommands;
 
 import java.util.ArrayList;
 
@@ -17,8 +16,7 @@ public class CommandRegistry {
     public static void init() {
         cmds = new ArrayList<ICommand>();
 
-        cmds.add(new PDPMonitor());
-        cmds.add(new RIOMonitor());
+        cmds.add(new PDPCommands());
     }
 
     public static void register(ICommand command) {

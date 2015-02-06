@@ -6,7 +6,7 @@ import frc.team5333.core.drive.RobotDriveTracker;
 import frc.team5333.core.io.IOManager;
 import frc.team5333.lib.Ports;
 import frc.team5333.lib.RobotData;
-import frc.team5333.lib.logger.Logger;
+import jaci.openrio.toast.lib.log.Logger;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

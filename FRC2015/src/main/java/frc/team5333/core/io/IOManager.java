@@ -3,8 +3,8 @@ package frc.team5333.core.io;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalSource;
 import frc.team5333.lib.Ports;
-import frc.team5333.lib.RobotState;
-import frc.team5333.lib.StateListener;
+import jaci.openrio.toast.lib.state.RobotState;
+import jaci.openrio.toast.lib.state.StateListener;
 
 import java.util.HashMap;
 
@@ -13,7 +13,7 @@ import java.util.HashMap;
  *
  * @author Jaci
  */
-public class IOManager implements StateListener {
+public class IOManager implements StateListener.Ticker {
 
     public static void setDigital(Ports port, boolean state) {
         port.getDO().set(state);
@@ -22,9 +22,5 @@ public class IOManager implements StateListener {
     @Override
     public void tickState(RobotState state) {
         Ports.tickAll();
-    }
-
-    @Override
-    public void transitionState(RobotState state, RobotState oldState) {
     }
 }

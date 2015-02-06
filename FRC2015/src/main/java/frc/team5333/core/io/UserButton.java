@@ -1,15 +1,15 @@
 package frc.team5333.core.io;
 
 import edu.wpi.first.wpilibj.Utility;
-import frc.team5333.lib.RobotState;
-import frc.team5333.lib.StateListener;
+import jaci.openrio.toast.lib.state.RobotState;
+import jaci.openrio.toast.lib.state.StateListener;
 
 /**
  * Handles data being sent from the User Button on the RoboRIO
  *
  * @author Jaci
  */
-public class UserButton implements StateListener {
+public class UserButton implements StateListener.Ticker {
 
     public static boolean pressed;
     public static long pressedTime;
@@ -41,7 +41,4 @@ public class UserButton implements StateListener {
         poll();
     }
 
-    @Override
-    public void transitionState(RobotState state, RobotState oldState) {
-    }
 }
