@@ -9,6 +9,8 @@ import frc.team5333.driver.control.drive.ThrottleScale;
 import frc.team5333.driver.control.mapper.AbstractControlMapper;
 import frc.team5333.driver.net.EnumNetworkControllers;
 import frc.team5333.driver.net.NetworkController;
+import frc.team5333.kinect.JointGUI;
+import frc.team5333.kinect.KiNETct;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -31,6 +33,9 @@ public class GuiDriverPanel extends JPanel {
     ControllerManager manager;
     JTextArea consoleLog;
     JScrollPane consoleScroll;
+
+    JointGUI kinectGUI;
+    public JTextField kinectHostname;
 
 
     public GuiDriverPanel() {
@@ -112,8 +117,12 @@ public class GuiDriverPanel extends JPanel {
         connectRIO.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NetworkController.setData(hostnameField.getText());
-                EnumNetworkControllers.connectAll();
+                new Thread() {
+                    public void run() {
+                        NetworkController.setData(hostnameField.getText());
+                        EnumNetworkControllers.connectAll();
+                    }
+                }.start();
             }
         });
         this.add(connectRIO);
@@ -148,6 +157,74 @@ public class GuiDriverPanel extends JPanel {
             }
         });
         this.add(commandInput);
+
+        kinectGUI = new JointGUI();
+        kinectGUI.setBounds(370, 70, 220, 270);
+        this.add(kinectGUI);
+
+        JLabel kinectHostLabel = new JLabel("Kinect Host:");
+        kinectHostLabel.setBounds(7, 262, 120, 20);
+        this.add(kinectHostLabel);
+
+        kinectHostname = new JTextField("localhost");
+        kinectHostname.setBounds(100, 260, 200, 25);
+        this.add(kinectHostname);
+
+        JButton kinectConnect = new JButton("Kinect");
+        kinectConnect.setBounds(165, 230, 130, 25);
+        kinectConnect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new KiNETct(kinectGUI).start();
+            }
+        });
+        this.add(kinectConnect);
+
+        JButton kinectCalibrate = new JButton("Calibrate");
+        kinectCalibrate.setBounds(165, 290, 130, 25);
+        kinectCalibrate.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread() {
+                    public void run() {
+                        try {
+                            Color bg = kinectGUI.getBackground();
+                            kinectGUI.setBackground(new Color(105, 50, 105));
+                            Thread.sleep(3000);
+                            KiNETct.calibrateOffsetAll();
+                            kinectGUI.setBackground(new Color(50, 105, 105));
+                            Thread.sleep(3000);
+                            KiNETct.calibrateScaleAll();
+                            kinectGUI.setBackground(bg);
+                        } catch (InterruptedException e1) {
+                        }
+                    }
+                }.start();
+            }
+        });
+        this.add(kinectCalibrate);
+
+        JButton kinectSelect = new JButton("Select");
+        kinectSelect.setBounds(165, 315, 130, 25);
+        kinectSelect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Thread() {
+                    public void run() {
+                        try {
+                            Color bg = kinectGUI.getBackground();
+                            kinectGUI.setBackground(new Color(0, 80, 0));
+                            Thread.sleep(3000);
+                            KiNETct.selectActive();
+                            kinectGUI.setBackground(bg);
+                        } catch (InterruptedException e1) {
+                        }
+                    }
+                }.start();
+            }
+        });
+        this.add(kinectSelect);
+
     }
 
     public void reinitControllers() {
