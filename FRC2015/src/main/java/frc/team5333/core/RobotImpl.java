@@ -10,16 +10,15 @@ import frc.team5333.core.net.command.CommandRegistry;
 import frc.team5333.lib.RobotData;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.Toast;
-import jaci.openrio.toast.core.webui.WebRegistry;
-import jaci.openrio.toast.lib.Robot;
 import jaci.openrio.toast.lib.log.Logger;
+import jaci.openrio.toast.lib.module.ToastModule;
 
 /**
  * The base robot class designed to hook into the rest of the program
  *
  * @author Jaci
  */
-public class RobotImpl implements Robot {
+public class RobotImpl extends ToastModule {
 
     static Logger logger;
 
@@ -44,6 +43,16 @@ public class RobotImpl implements Robot {
      */
     public static RobotImpl getInstance() {
         return (RobotImpl) RobotData.blackboard.get("RobotImpl");
+    }
+
+    @Override
+    public String getModuleName() {
+        return "Team 5333";
+    }
+
+    @Override
+    public String getModuleVersion() {
+        return "1.0.0";
     }
 
     /**
@@ -72,12 +81,10 @@ public class RobotImpl implements Robot {
      * Use this for Initialization tasks
      */
     @Override
-    public void startCompetition() {
+    public void start() {
         log().info("Main Program Starting...");
 
         CommandRegistry.init();
-
-        LiveWindow.setEnabled(false);
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
