@@ -2,8 +2,6 @@ package frc.team5333.lib;
 
 import edu.wpi.first.wpilibj.*;
 import frc.team5333.core.RobotImpl;
-import frc.team5333.core.io.IOCallback;
-import frc.team5333.core.io.LimitCallback;
 
 /**
  * An enumeration of all the ports allocated on the RoboRio
@@ -18,13 +16,11 @@ public enum Ports {
     CLAMP(2),
     LIFT(3),
 
-    /** DIO **/
-    NET_DEBUG(0),
-    NET_CONTROL(1),
-
     /** DII **/
-    LIFT_MAX_LIMIT(2, new LimitCallback(0)),
-    LIFT_MIN_LIMIT(3, new LimitCallback(1)),
+    LIFT_MAX_LIMIT(0),
+    LIFT_MIN_LIMIT(1),
+    CLAMP_0(2),
+    CLAMP_1(3),
     ;
 
     int port;
@@ -34,23 +30,8 @@ public enum Ports {
     AnalogOutput aio;
     AnalogInput aii;
 
-    IOCallback callback = null;
-
     Ports(int portID) {
         this.port = portID;
-    }
-
-    Ports(int portID, IOCallback callback) {
-        this(portID);
-        this.callback = callback;
-    }
-
-    public static void tickAll() {
-        for (Ports port : Ports.values()) {
-            if (port.hasCallback()) {
-                port.tickCallback();
-            }
-        }
     }
 
     /**
@@ -78,14 +59,6 @@ public enum Ports {
     public AnalogInput getAI() {
         if (aii == null) aii = new AnalogInput(getPort());
         return aii;
-    }
-
-    public boolean hasCallback() {
-        return callback != null;
-    }
-
-    public void tickCallback() {
-        callback.tick(this);
     }
 
 }

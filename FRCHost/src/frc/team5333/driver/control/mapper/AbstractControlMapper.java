@@ -38,6 +38,7 @@ public abstract class AbstractControlMapper {
     }
 
     public abstract void handleInput(PollData data, Component component, Controller controller, ControllerManager manager);
+    public void finalizeInput(ControllerManager manager) {}
 
     public String toString() {
         return getFriendlyName();

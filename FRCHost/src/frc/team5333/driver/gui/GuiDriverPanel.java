@@ -272,7 +272,7 @@ public class GuiDriverPanel extends JPanel {
         gr.fillRect(7, 290, 50, 20);
 
         gr.setColor(Color.BLACK);
-        gr.drawString(DriveController.isLocked() ? "Lift" : "Drive", 10, 305);
+        gr.drawString(DriveController.isLocked() ? "Lock" : "Drive", 10, 305);
     }
 
 }

@@ -6,6 +6,8 @@ import frc.team5333.core.drive.RobotDriveTracker;
 import frc.team5333.core.io.IOManager;
 import frc.team5333.core.io.UserButton;
 import frc.team5333.core.net.EnumDispatchers;
+import frc.team5333.core.net.command.CommandAccelerometer;
+import frc.team5333.core.net.command.CommandMotor;
 import frc.team5333.core.net.command.CommandRegistry;
 import frc.team5333.lib.RobotData;
 import jaci.openrio.toast.core.StateTracker;
@@ -64,7 +66,7 @@ public class RobotImpl extends ToastModule {
         log().info("Prestart Phase Begun...");
 
         StateTracker.addTicker(new UserButton());
-        StateTracker.addTicker(new IOManager());
+        IOManager.init();
 
         RobotData.blackboard.put("Team", 5333);
         RobotData.blackboard.put("RobotImpl", this);
@@ -85,6 +87,8 @@ public class RobotImpl extends ToastModule {
         log().info("Main Program Starting...");
 
         CommandRegistry.init();
+        CommandRegistry.register(new CommandMotor());
+        CommandRegistry.register(new CommandAccelerometer());
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override

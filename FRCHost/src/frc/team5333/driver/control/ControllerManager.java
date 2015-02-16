@@ -78,6 +78,8 @@ public class ControllerManager {
                 GuiDriverPanel.instance.refresh();
             }
         }
+        if (activeMapper != null)
+            activeMapper.finalizeInput(this);
     }
 
     public PollData getData(String id) {

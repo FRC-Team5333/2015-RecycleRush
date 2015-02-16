@@ -21,16 +21,14 @@ public class NetworkDispatcher extends Thread {
     int port;
     INetReader callback;
     ServerSocket socket;
-    Ports signal;
 
     public ArrayList<NetworkedClient> connectedClients = new ArrayList<NetworkedClient>();
 
-    public NetworkDispatcher(String id, int port, INetReader callback, Ports signal) {
+    public NetworkDispatcher(String id, int port, INetReader callback) {
         this.setName("Network-" + id + "-Dispatcher");
         this.nid = id;
         this.port = port;
         this.callback = callback;
-        this.signal = signal;
     }
 
     public void run() {
@@ -42,7 +40,7 @@ public class NetworkDispatcher extends Thread {
 
             while ((Boolean)RobotData.blackboard.get("network:" + nid + ":alive")) {
                 Socket clientS = socket.accept();
-                NetworkedClient client = new NetworkedClient(socket, clientS, this, signal);
+                NetworkedClient client = new NetworkedClient(socket, clientS, this);
                 connectedClients.add(client);
                 client.start();
             }
@@ -64,6 +62,7 @@ public class NetworkDispatcher extends Thread {
 
     public void stopNetwork() throws IOException {
         RobotData.blackboard.putIfAbsent("network:" + nid + ":alive", false);
-        socket.close();
+        if (socket != null)
+            socket.close();
     }
 }

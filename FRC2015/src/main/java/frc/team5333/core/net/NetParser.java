@@ -60,7 +60,7 @@ public class NetParser {
                     if (data.equals("lift"))
                         netLogger.info("Lift Motor: " + RobotDriveTracker.getLift());
 
-                    CommandRegistry.parse(data);
+                    CommandRegistry.parse(data, client);
 
                     break;
             }

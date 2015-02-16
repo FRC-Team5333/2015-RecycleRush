@@ -19,19 +19,19 @@ public enum EnumDispatchers {
         public void readLoop(NetIDs id, NetworkedClient client, DataInputStream reader) throws IOException {
             NetParser.parse(id, reader.readFloat(), client);
         }
-    }, Ports.NET_CONTROL),
+    }),
     DEBUG("debug", 5802, new INetReader() {
         @Override
         public void readLoop(NetIDs id, NetworkedClient client, DataInputStream reader) throws IOException {
             String utf = reader.readUTF();
             NetParser.parse(id, utf, client);
         }
-    }, Ports.NET_DEBUG);
+    });
 
     NetworkDispatcher dispatch;
 
-    EnumDispatchers(String id, int port, INetReader reader, Ports signal) {
-        NetworkDispatcher dispatch = new NetworkDispatcher(id, port, reader, signal);
+    EnumDispatchers(String id, int port, INetReader reader) {
+        NetworkDispatcher dispatch = new NetworkDispatcher(id, port, reader);
         this.dispatch = dispatch;
     }
 

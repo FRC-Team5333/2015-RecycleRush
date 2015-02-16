@@ -34,14 +34,11 @@ public class NetworkedClient extends Thread {
 
     int timeoutRemain;
 
-    Ports signal;
-
-    public NetworkedClient(ServerSocket socket, Socket client, NetworkDispatcher dispatcher, Ports signal) {
+    public NetworkedClient(ServerSocket socket, Socket client, NetworkDispatcher dispatcher) {
         this.setName("NetClient");
         this.server = socket;
         this.client = client;
         this.dispatcher = dispatcher;
-        this.signal = signal;
     }
 
     public void run() {
@@ -49,9 +46,6 @@ public class NetworkedClient extends Thread {
             NetParser.netLogger.info("Client Connected! " + client);
             reader = new DataInputStream(client.getInputStream());
             writer = new DataOutputStream(client.getOutputStream());
-
-            if (signal != null)
-                IOManager.setDigital(signal, true);
 
             replyCommand("***START BACKLOG***");
 
@@ -80,9 +74,6 @@ public class NetworkedClient extends Thread {
                 client.close();
             } catch (IOException e) {
             }
-
-        if (signal != null)
-            IOManager.setDigital(signal, false);
     }
 
     public void replyCommand(String s) throws IOException {

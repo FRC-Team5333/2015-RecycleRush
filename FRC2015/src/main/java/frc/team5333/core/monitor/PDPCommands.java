@@ -2,6 +2,7 @@ package frc.team5333.core.monitor;
 
 import edu.wpi.first.wpilibj.ControllerPower;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import frc.team5333.core.net.NetworkedClient;
 import frc.team5333.core.net.command.ICommand;
 import jaci.openrio.toast.core.monitoring.power.PDPMonitor;
 
@@ -22,7 +23,7 @@ public class PDPCommands implements ICommand {
         return "pdp";
     }
 
-    public void runCommand(String[] cmd) {
+    public void runCommand(String[] cmd, NetworkedClient client) {
         if (cmd[0].equalsIgnoreCase("voltage"))
             log().info("Controller Voltage: " + round(ControllerPower.getInputVoltage(), 2));
         else if (cmd[0].equalsIgnoreCase("batvoltage"))

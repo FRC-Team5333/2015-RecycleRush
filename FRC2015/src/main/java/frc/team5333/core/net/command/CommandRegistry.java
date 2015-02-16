@@ -1,6 +1,7 @@
 package frc.team5333.core.net.command;
 
 import frc.team5333.core.monitor.PDPCommands;
+import frc.team5333.core.net.NetworkedClient;
 
 import java.util.ArrayList;
 
@@ -23,14 +24,14 @@ public class CommandRegistry {
         cmds.add(command);
     }
 
-    public static void parse(String command) {
+    public static void parse(String command, NetworkedClient client) {
         String[] split = command.split(" ");
         String[] args = new String[split.length - 1];
         System.arraycopy(split, 1, args, 0, split.length - 1);
 
         for (ICommand cmd : cmds) {
             if (cmd.getCommandPrefix().equals(split[0]))
-                cmd.runCommand(args);
+                cmd.runCommand(args, client);
         }
     }
 

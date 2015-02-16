@@ -1,5 +1,6 @@
 package frc.team5333.core.drive;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Victor;
@@ -20,8 +21,8 @@ public class RobotDriveTracker implements StateListener.Ticker {
     static double clamp;
     static double lift;
 
-    public static double lift_max;
-    public static double lift_min;
+    public static boolean lift_drop;
+    public static boolean lift_rise;
 
     static RobotDrive drive;
     static Talon leftMotor;
@@ -86,13 +87,29 @@ public class RobotDriveTracker implements StateListener.Ticker {
     }
 
     public static void update() {
+        DigitalInput lift_top = Ports.LIFT_MAX_LIMIT.getDI();
+        DigitalInput lift_bottom = Ports.LIFT_MIN_LIMIT.getDI();
+
+        DigitalInput clamp0 = Ports.CLAMP_0.getDI();
+        DigitalInput clamp1 = Ports.CLAMP_1.getDI();
+
+        boolean clampE = clamp0.get() || clamp1.get();
+
+        lift_rise = lift_top.get();
+        lift_drop = lift_bottom.get();
+
         drive.tankDrive(left, right, true);
 
-        otherDrive.tankDrive(clamp, lift, true);
+        otherDrive.tankDrive(clampE ? clamp : 0, limit_lift(), true);
     }
 
     static double limit_lift() {
-        return Math.max(Math.min(lift_max, lift), lift_min);
+        double val = lift;
+        if (lift_drop)
+            val = Math.min(val, 0);
+        if (lift_rise)
+            val = Math.max(val, 0);
+        return val;
     }
 
     @Override

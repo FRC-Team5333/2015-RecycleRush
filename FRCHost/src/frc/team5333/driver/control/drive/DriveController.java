@@ -61,10 +61,10 @@ public class DriveController {
 		EnumNetworkControllers.CONTROL.getController().sendMessage(NetIDs.DRIVE_RIGHT, (float) ThrottleScale.scale(right));
 	}
 	public static void updateClamp() {
-		EnumNetworkControllers.CONTROL.getController().sendMessage(NetIDs.CLAMP, (float) -ThrottleScale.scale(clamp));
+		EnumNetworkControllers.CONTROL.getController().sendMessage(NetIDs.CLAMP, (float) -clamp);
 	}
 	public static void updateLift() {
-		EnumNetworkControllers.CONTROL.getController().sendMessage(NetIDs.LIFT, (float) -ThrottleScale.scale(lift));
+		EnumNetworkControllers.CONTROL.getController().sendMessage(NetIDs.LIFT, (float) -lift);
 	}
 
 	

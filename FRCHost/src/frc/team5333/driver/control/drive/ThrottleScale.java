@@ -12,6 +12,10 @@ public class ThrottleScale {
 
     private static int scale = 50;
 
+    public static void setScale(int s) {
+        scale = s;
+    }
+
     public static double getScale() {
         return scale / 100D;
     }
