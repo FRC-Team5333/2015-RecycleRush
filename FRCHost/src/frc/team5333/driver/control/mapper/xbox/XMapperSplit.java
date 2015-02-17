@@ -60,11 +60,19 @@ public class XMapperSplit extends AbstractControlMapper {
             }
             DriveController.setLift(z);
         }
+        
+        String laxis = "6";
+        String raxis = "7";
+        
+        if (System.getProperty("os.name").toUpperCase().contains("WIN")) {
+        	laxis = "8";
+        	raxis = "9";
+        }
 
-        if (manager.getData("6").changed || manager.getData("7").changed) {
+        if (manager.getData(laxis).changed || manager.getData(raxis).changed) {
             float clamp = 0F;
-            clamp += manager.getData("6").lastPollData;
-            clamp -= manager.getData("7").lastPollData;
+            clamp += manager.getData(laxis).lastPollData;
+            clamp -= manager.getData(raxis).lastPollData;
             DriveController.setClamp(clamp);
         }
     }
