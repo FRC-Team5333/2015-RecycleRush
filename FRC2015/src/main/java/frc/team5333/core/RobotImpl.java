@@ -7,6 +7,7 @@ import frc.team5333.core.io.IOManager;
 import frc.team5333.core.io.UserButton;
 import frc.team5333.core.net.EnumDispatchers;
 import frc.team5333.core.net.command.CommandAccelerometer;
+import frc.team5333.core.net.command.CommandDIO;
 import frc.team5333.core.net.command.CommandMotor;
 import frc.team5333.core.net.command.CommandRegistry;
 import frc.team5333.lib.RobotData;
@@ -89,6 +90,7 @@ public class RobotImpl extends ToastModule {
         CommandRegistry.init();
         CommandRegistry.register(new CommandMotor());
         CommandRegistry.register(new CommandAccelerometer());
+        CommandRegistry.register(new CommandDIO());
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override

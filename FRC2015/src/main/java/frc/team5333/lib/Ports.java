@@ -13,14 +13,14 @@ public enum Ports {
     /** PWM **/
     LEFT_DRIVE(1),
     RIGHT_DRIVE(0),
-    CLAMP(2),
-    LIFT(3),
+    CLAMP(3),
+    LIFT(2),
 
     /** DII **/
-    LIFT_MAX_LIMIT(0),
-    LIFT_MIN_LIMIT(1),
-    CLAMP_0(2),
-    CLAMP_1(3),
+    LIFT_MAX_LIMIT(2),
+    LIFT_MIN_LIMIT(3),
+    CLAMP_0(0),
+    CLAMP_1(1),
     ;
 
     int port;

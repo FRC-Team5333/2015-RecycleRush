@@ -93,14 +93,15 @@ public class RobotDriveTracker implements StateListener.Ticker {
         DigitalInput clamp0 = Ports.CLAMP_0.getDI();
         DigitalInput clamp1 = Ports.CLAMP_1.getDI();
 
-        boolean clampE = clamp0.get() || clamp1.get();
+        boolean clampE = !(clamp0.get() && clamp1.get());
+        //boolean clampE = true;
 
-        lift_rise = lift_top.get();
-        lift_drop = lift_bottom.get();
+        lift_rise = !lift_top.get();
+        lift_drop = !lift_bottom.get();
 
         drive.tankDrive(left, right, true);
 
-        otherDrive.tankDrive(clampE ? clamp : 0, limit_lift(), true);
+        otherDrive.tankDrive(clampE ? clamp : Math.max(clamp, 0), limit_lift(), true);
     }
 
     static double limit_lift() {
@@ -109,7 +110,7 @@ public class RobotDriveTracker implements StateListener.Ticker {
             val = Math.min(val, 0);
         if (lift_rise)
             val = Math.max(val, 0);
-        return val;
+        return -val;
     }
 
     @Override
