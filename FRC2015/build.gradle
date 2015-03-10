@@ -12,7 +12,7 @@ buildscript {
 	}
   }
   dependencies {
-    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '1.1.4'			//Change this line if you wish to Update GradleRIO
+    classpath group: 'jaci.openrio.gradle', name: 'GradleRIO', version: '1.1.6'			//Change this line if you wish to Update GradleRIO
   }
 }
 
@@ -36,8 +36,8 @@ gradlerio.team = "5333"                                   //Your FRC team number
 gradlerio.deployFile = "toast/modules/${archivesBaseName}.jar"
 
 dependencies {
-  //compile group: 'jaci.openrio.toast', name: 'Toast', version: '0.0.1-R4-DEV'     //Change this line to update Toast
-  compile fileTree(dir: "../../../OpenRIO/Toast/build/latest", include: "*.jar")
+  compile group: 'jaci.openrio.toast', name: 'Toast', version: '0.2.0'     //Change this line to update Toast
+  //compile fileTree(dir: "../../../OpenRIO/Toast/build/latest", include: "*.jar")
 }
 
 jar.doLast {

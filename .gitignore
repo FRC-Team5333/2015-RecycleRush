@@ -11,3 +11,5 @@ FRCHost/.settings/
 *.iml
 *.iws
 FRC2015/.gradle/
+out/
+run/

@@ -1,9 +1,6 @@
 package frc.team5333.core.drive;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.*;
 import frc.team5333.lib.Ports;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.lib.state.RobotState;
@@ -111,6 +108,15 @@ public class RobotDriveTracker implements StateListener.Ticker {
         if (lift_rise)
             val = Math.max(val, 0);
         return -val;
+    }
+
+    public static SpeedController[] getControllers() {
+        SpeedController[] map = new SpeedController[4];
+        map[0] = leftMotor;
+        map[1] = rightMotor;
+        map[2] = clampMotor;
+        map[3] = liftMotor;
+        return map;
     }
 
     @Override

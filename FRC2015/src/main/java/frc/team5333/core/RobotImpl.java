@@ -2,14 +2,12 @@ package frc.team5333.core;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import frc.team5333.core.drive.AutonomousDriver;
 import frc.team5333.core.drive.RobotDriveTracker;
 import frc.team5333.core.io.IOManager;
 import frc.team5333.core.io.UserButton;
 import frc.team5333.core.net.EnumDispatchers;
-import frc.team5333.core.net.command.CommandAccelerometer;
-import frc.team5333.core.net.command.CommandDIO;
-import frc.team5333.core.net.command.CommandMotor;
-import frc.team5333.core.net.command.CommandRegistry;
+import frc.team5333.core.net.command.*;
 import frc.team5333.lib.RobotData;
 import jaci.openrio.toast.core.StateTracker;
 import jaci.openrio.toast.core.Toast;
@@ -74,6 +72,7 @@ public class RobotImpl extends ToastModule {
         EnumDispatchers.start();
 
         RobotDriveTracker.prestart();
+        AutonomousDriver.init();
         Logger.addHandler(new LogManager());
 
         log().info("Prestart Phase End...");
@@ -91,6 +90,9 @@ public class RobotImpl extends ToastModule {
         CommandRegistry.register(new CommandMotor());
         CommandRegistry.register(new CommandAccelerometer());
         CommandRegistry.register(new CommandDIO());
+        CommandRegistry.register(new CommandAutoRecord());
+        CommandRegistry.register(new CommandAutoPlayback());
+        CommandRegistry.register(new CommandAutoSet());
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
