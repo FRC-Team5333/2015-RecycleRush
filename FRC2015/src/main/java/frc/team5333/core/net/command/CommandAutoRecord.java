@@ -30,7 +30,7 @@ public class CommandAutoRecord implements ICommand {
                     log().info("1");
                     Thread.sleep(1000);
                     log().info("GO");
-                    object.invokeMethod("beginRecording", null);
+                    object.invokeMethod("startRecording", null);
                 } catch (InterruptedException e) {
                     log().exception(e);
                 }
